@@ -91,11 +91,83 @@
 							<h3>Functional Requirements</h3>
 							<p>To fit on a benchtop, the linear stage needed to lay horizontal, and it required a sliding carriage on which to secure the pendulum mechanism. For coolness points, the pendulum had to carry an object up to 1kg in mass while in balance. This meant that the pendulum assembley had to be rigid enough to withstand the load, and the DC motor powerful enough to accelerate the pendulum to the necessary velocities. This also meant that the linear stage needed to be long enough to allow for large displacements of the pendulum base in case it needed to deccelerate gradually. The mathematical model for the inverted-pendulum system is simple but it is also highly nonlinear, so sensing and feedback loop control is required to keep it at a constant angle.</p>
 
+							<span class="image main">
+								<img src="images/Balancing Pendulum/pendulum_coding_power-requirements.jpg" alt="" />
+								<p style="text-align:center"> Using a Python script and physics simulation to approximate the maximum power draw of the motor.</p>
+							</span>
+
 							<h3>Limitations</h3>
 							<p>The main limiting factor was my budget. I didn't want to spend more than $300 on the entire assembly so only the most essential precision components were purchased from McMaster-Carr. This included the precision ground steel rods and the teflon bearings which were cheaper than regular ball bearings. With no initial machining/engineering experience, the first attempts lacked the necessary precision tolerances. This lack was compensated for through the use of built-in flexures on the rail carriage. Another limitation was physical space. This was a machine which needed to be portable and take up little space on the benchtop, but also be large enough to handle with normal garage tools. Finally, it needed to be safe enough to poke with a finger (and demonstrate enternal perturbations), so safety measures had to be integrated into the design as well.</p>
 
 							<h3>Brainstorming and Design</h3>
 							<p>The first step was to sketch ideas and think of all the possible ways to satisfy the functional requirements within the limitaitons. The options were narrowed down once a few benchtop models were whipped up using LEGO technic pieces. Afterwards, the next stage was to CAD model everything in SolidWorks and Fusion 360, and further simplify the design while making sure to consult with peers. The final design concept was kept throughout the building stage, only the individual component layout and structure changed dramatically. Consider the evolution from 2018 to 2021 shown in the images below.</p>
+
+							<span class="image main">
+								<img src="images/Balancing Pendulum/pendulum_CAD-old.jpg" alt="" />
+								<p style="text-align:center"> Fusion 360 assembly showing initial design (2018).</p>
+							</span>
+
+							<span class="image main">
+								<img src="images/Balancing Pendulum/pendulum_CAD-recent.jpg" alt="" />
+								<p style="text-align:center"> SolidWorks assembly showing final design (2022).</p>
+							</span>
+
+							<h4>Component: Flexured Carriage</h4>
+
+							A large issue during the building and design phase was that the components used are tight toleranced and any displacment causes enormous stresses that bind up the carriage motion. Therefore, mechanical flexures, are used to decrease the spring constant of various motion components and reduce the stresses casued by load-induced strains. I kept an engineering notebook all along to record my progress and figure out formulas.
+
+							<span class="image main">
+								<img src="images/Balancing Pendulum/pendulum_enotebook_sample.jpg" alt="" />
+								<p style="text-align:center"> Figuring out the tolerances in the linear carriage, and the optimal flexure design to accomodate them.</p>
+							</span>
+
+							The most important flexures on the machine are ones which hold the linear bearings in place and are attached to the carriage body. The flexures account for misalignment errors of the two rods relative to each other, as well as how the carriage blocks are attached to the carriage chassis.
+
+							<span class="image main">
+								<img src="images/Balancing Pendulum/pendulum_flexure_collage.jpg" alt="" />
+								<p style="text-align:center"> Runnng FEM simulations on various bearing mount flexure designs to determine the smallest and most effective form factor.</p>
+							</span>
+
+							Initially these were to be waterjetted out of aluminum bar stock, but the more economical choice of 3D printing them won out in the end.
+							<!-- <span class="image main">
+								<img src="images/Balancing Pendulum/pendulum_flexure_3dprinted.jpg" alt="" />
+								<p style="text-align:center"> 3D printing the flexure mounts to be used on the bearing blocks.</p>
+							</span> -->
+
+							Another important flexure in the carriage assembly is the carriage chassis itself which compensates for the vertical misalignment of the two carriage blocks. Becasue of the limitations of how the bearing flexures are able to bend, this flexured chassis makes up for the lost degree of freedom.
+							<span class="image main">
+								<img src="images/Balancing Pendulum/pendulum_flexure_collage2.jpg" alt="" />
+								<p style="text-align:center"> Runnng simulations on the carriage chassis flexure to find the optimal tab width.</p>
+							</span>
+
+							This piece was cut out of 1/8 inch low-carbon steel on an OMAX waterjet cutter.
+
+							<span class="image main">
+								<img src="images/Balancing Pendulum/pendulum_flexure_waterjetted.jpg" alt="" />
+								<p style="text-align:center"> Instaling the flexured chassis.</p>
+							</span>
+
+							<h4>Component: Belt Tensioner</h4>
+
+							There had been a couple iterations for the belt tensioner which would pull the two ends of the timing belt together and also be secured in a recess of the linear carriage. The first design involved a platw which would pull down a small belt section which interloccked with the two loose ends and pulled them towards the center. This worked fine until the belt section gradually deformed and loosened up, thereby losing its tension.
+
+							<span class="image main">
+								<img src="images/Balancing Pendulum/pendulum_tensioner_model1.jpg" alt="" />
+								<p style="text-align:center"> Designing and installing the first belt tensioner.</p>
+							</span>
+
+							The second belt tensioner was build out of aluminum stock and steel bolts so that it would be capable of applying much larger tensions with minimal installation work. This required lots of manual machining and failures (wrong speeds/feeds, broken tap, insufficient tolerancing, etc.), but in the end it came out great.
+
+							<span class="image main">
+								<img src="images/Balancing Pendulum/pendulum_tensioner_model2.jpg" alt="" />
+								<p style="text-align:center"> The new and improved belt tensioner.</p>
+							</span>
+
+						<h3>Results</h3>
+
+						As of now, the linear stage is up and running. There is a PID loop running through an Arduino-Uno which takes in encoder data from the motor and adjusts the motor input voltage accordingly. The motor that is used is a <a href="https://www.vexrobotics.com/217-3371.html">VEX Mini Cim motor</a>, and the motor controller is a <a href="https://www.vexrobotics.com/217-9191.html">Talon SPX</a>. You can <a href="https://youtu.be/iQwe4ZnMEd0">see a video</a> of the linear stage being controlled by a potentiometer position.
+
+						<!-- <iframe width="420" height="315" src="https://youtu.be/iQwe4ZnMEd0"></iframe> -->
 
 						</article>
 
