@@ -31,34 +31,55 @@
 						<article id="mesodyne_PCB">
 							<h2 class="major">Air Intake Control PCB</h2>
 							<h3>Problem</h3>
-							<p>This project addressed the need for a steady and controllable air intake blower module that would reliably sustain propane combustion for hours on end. My task was to design a digital control system that would supply the appropriate mass flow rate of air for any burner power level between 800 and 1500 Watts.</p>
-							<p>This turned out to be harder than expected due to thermoacoustic resonances that would occur between the flame and the blower device running under a PID loop. By choosing the right microcontroller, sensors, and control algorithm, we hypothesized that these negative performances would diminish. </p>
-							<p>As this module would eventually be incorporated in a portable power generator, an additional constrain on this problem was the need for greater efficiency (power drawn / burner power sustained).</p>
+							<p>As Mesodyne's Lightcell device matured from benchtop testing towards a final product, the propane burner's air supply needed to transition from the lab's air compressor to a more compact solution. The ultimate requirement for such a submodule would be power efficiency, as the Lightcell would eventually become a standalone power generation unit. </p>
+							<p>To address this issue, a high-pressure blower fan was needed, as well as a feedback signal and a controller to guarantee the correct mass flow rate was being delivered. A presistent problem thermoacoustic resonances would occur between the flame and the blower device running under a PID loop.</p>
+						
+							<h3>Methodology</h3>
+							<p>I began by experimenting with various off-the-shelf blower fans, mass flow sensors, and microcontrollers. The design philosophy was "fail fast, fail often" as I was climbing a steep learning curve into the circuit design world. While developing my first PCBs that would meet the minimum design requirements, I learned 4 incredibly important lessons:
+							<ul>
+								<li>Before soldering a new circuit or using a new component, always test it on a breadboard.</li>
+								<li>Do not forget to check continuity or shorts before applying power.</li>
+								<li>Avoid crowding components together unneccessarially.</li>
+								<li>Actually read through the datasheet.</li>
+							</ul>
+							In essence, I realized the importance of testing each assumption before jumping to conclusions. I learned this the hard way - by frying two Arduino Nano's, two Adafruit Bluefruit nRF52's, one Arduino Mega, two motor driver chips, and the USB adapter on my Lenovo laptop!</p>
+
+							<h3> Iterations </h3>
+							The first iteration of the controller was based on an Arduino Due protoype PCB with a Sensirion flow meter as the feedback device. Both speed control and flow rate control were implemented in a cascading PID loop. This setup was problematic because the flow meter measurement would be affected by turbulent air exiting the blower, and the minimum fan speed was still too powerful for our needs.
 							<span class="image main">
 								<img src="images/Mesodyne/PCB/img1.jpg" alt="" />
 								<p style="text-align:center"></p>
 							</span>
-
-							<h3>Approach</h3>
-							<p></p>
+							The second iteration included a laminar flow pipe between the blower and the flow meter, air bleed ports in front of the blower to cut down on flow rate, and a different controller - an Adafruit Bluefruit nRF52. The more powerful controller allowed for much smoother operation of the blower, and this device worked spectacularly well. However the entire device required 48W to run, and this would gobble up our power budget.
+							<!-- <p></p> -->
 							<span class="image main">
 								<img src="images/Mesodyne/PCB/img3.jpg" alt="" />
 								<p style="text-align:center"></p>
 							</span>
-
-							<h3>Design Iterations and Troubleshooting</h3>
-							<p></p>
+							For the next version, I reverted back to the Arduino Nano for its greater availability, used a less powerful blower fan from Micronel, and a simpler full-bridge motor driver instead of the power-hungry BLDC motor driver board. These assembled into the PCB shown below. This board would be equipped with a 12-bit ADC module and would be back-compatible with the previous blower. However these features were never used because of some missing traces and incorrect wiring of the I2C signal lines.
 							<span class="image main">
-								<img src="images/Mesodyne/PCB/img4.jpg" alt="" />
+								<img src="images/Mesodyne/PCB/img8.jpg" alt="" />
 								<p style="text-align:center"></p>
 							</span>
-
-							<h3>Final Design</h3>
-							<p></p>
+							By this point, most of the components were working out for us, but we needed to look further ahead in the future. We decided to design the next prototype around the STM32F07 family of MCUs because of their availability and accessibility. The board began accumulating additional features such as thermocouple chips, analog inuputs from thermistors, flash memory, multiple communication lines, analog pressure sensors, and power MOSFETs. After weeks of work and revisions in KiCAD, we came up with a solution that would be functionally equivalent to PCB v1, only supersede it in processing power and number of peripherals.
 							<span class="image main">
+								<img src="images/Mesodyne/PCB/img10.jpg" alt="" />
+								<p style="text-align:center"></p>
+							</span> 	
+
+							<h3>Benchtop Performance</h3>
+							<p>Designing the electronics was a time-consuming task, but even more effort was required during the tuning process for the blower. The device would work perfectly during the middle of the run when the burner had already heated up to its equilibirum temperature, but chaos broke out during the burner's cold ignition and startup. Following ignition, as the flame developed in size and stability the blower needed to supply a constant air stream, but instead the motor developed thermoacoustic vibrations due to its lack of sufficient back-pressure. As a result, combustion would oscillate violently, and no PID tuning would be able to fully dampen them. </p>
+							<span class="image main">
+								<img src="images/Mesodyne/PCB/img13.jpg" alt="" />
+								<p style="text-align:center"></p>
+							</span>
+							
+							<h3>Conclusion</h3>
+							<p>While the system as configured is controllable, a PID loop coupled to an unknown system (the ignited burner) cannot be tuned to optimality seperately. One solution is to weaken the coupling between the blower and burner by means of physical redesigning of either one. Another solution is to run holisitic system identification during operation, but I found most PID auto-tuners to be too primitive for this. Potentially, a solution like reinforcement learning could be implemented since this powerful tenchique requires no information about the system, only the bounds of operation and a cost function.</p>
+							<!-- <span class="image main">
 								<img src="images/Mesodyne/PCB/img5.jpg" alt="" />
 								<p style="text-align:center"></p>
-							</span>
+							</span> -->
 						</article>
 						
 
