@@ -31,8 +31,7 @@
 						<article id="mesodyne_PCB">
 							<h2 class="major">Air Intake Control PCB</h2>
 							<h3>Problem</h3>
-							<p>As Mesodyne's Lightcell device matured from benchtop testing towards a final product, the propane burner's air supply needed to transition from the lab's air compressor to a more compact solution. The ultimate requirement for such a submodule would be power efficiency, as the Lightcell would eventually become a standalone power generation unit. </p>
-							<p>To address this issue, a high-pressure blower fan was needed, as well as a feedback signal and a controller to guarantee the correct mass flow rate was being delivered. A presistent problem thermoacoustic resonances would occur between the flame and the blower device running under a PID loop.</p>
+							<p>As Mesodyne's Lightcell device matured from benchtop testing towards a final product, the propane burner's air supply needed to transition from the lab's air compressor to a more compact solution. The ultimate requirement for such a submodule would be power efficiency, as the Lightcell would eventually become a standalone power generation unit. To address this issue, a high-pressure blower fan was needed, as well as a feedback signal and a controller to guarantee the correct mass flow rate was being delivered. A presistent problem thermoacoustic resonances would occur between the flame and the blower device running under a PID loop.</p>
 						
 							<h3>Methodology</h3>
 							<p>I began by experimenting with various off-the-shelf blower fans, mass flow sensors, and microcontrollers. The design philosophy was "fail fast, fail often" as I was climbing a steep learning curve into the circuit design world. While developing my first PCBs that would meet the minimum design requirements, I learned 4 incredibly important lessons:
@@ -40,11 +39,11 @@
 								<li>Before soldering a new circuit or using a new component, always test it on a breadboard.</li>
 								<li>Do not forget to check continuity or shorts before applying power.</li>
 								<li>Avoid crowding components together unneccessarially.</li>
-								<li>Actually read through the datasheet.</li>
+								<li>Actually read the datasheet.</li>
 							</ul>
-							In essence, I realized the importance of testing each assumption before jumping to conclusions. I learned this the hard way - by frying two Arduino Nano's, two Adafruit Bluefruit nRF52's, one Arduino Mega, two motor driver chips, and the USB adapter on my Lenovo laptop!</p>
+							Essentially, I realized the importance of testing each assumption before jumping to conclusions. I learned this the hard way - by frying two Arduino Nano's, two Adafruit Bluefruit nRF52's, one Arduino Mega, two motor driver chips, and the USB adapter on my Lenovo laptop!</p>
 
-							<h3> Iterations </h3>
+							<h3> Iterations and Prototyping </h3>
 							The first iteration of the controller was based on an Arduino Due protoype PCB with a Sensirion flow meter as the feedback device. Both speed control and flow rate control were implemented in a cascading PID loop. This setup was problematic because the flow meter measurement would be affected by turbulent air exiting the blower, and the minimum fan speed was still too powerful for our needs.
 							<span class="image main">
 								<img src="images/Mesodyne/PCB/img1.jpg" alt="" />
@@ -75,11 +74,82 @@
 							</span>
 							
 							<h3>Conclusion</h3>
-							<p>While the system as configured is controllable, a PID loop coupled to an unknown system (the ignited burner) cannot be tuned to optimality seperately. One solution is to weaken the coupling between the blower and burner by means of physical redesigning of either one. Another solution is to run holisitic system identification during operation, but I found most PID auto-tuners to be too primitive for this. Potentially, a solution like reinforcement learning could be implemented since this powerful tenchique requires no information about the system, only the bounds of operation and a cost function.</p>
+							<p>While the system as configured is controllable, a PID loop coupled to an unknown system (the ignited burner) cannot be tuned to optimality seperately. One solution is to weaken the coupling between the blower and burner by means of a physical redesign of either one. Another solution is to run holisitic system identification during operation, but I found most PID auto-tuners to be too primitive for this. Potentially, a solution like reinforcement learning could be implemented since this powerful tenchique requires no information about the system, only the bounds of operation and a cost function.</p>
 							<!-- <span class="image main">
 								<img src="images/Mesodyne/PCB/img5.jpg" alt="" />
 								<p style="text-align:center"></p>
 							</span> -->
+						</article>
+
+						<!-- Mesodyne Calorimeter -->
+						<article id="mesodyne_calorimeter">
+							<h2 class="major">Thermal Emissions Calorimeter</h2>
+							<p>Disclaimer: many aspects of this project not disclosed here are confidential and proprietary to Mesodyne.</p>
+							<h3>Problem</h3>
+							<p></p>
+						
+							<h3>Methodology</h3>
+							<p></p>
+
+							<h3> CAD Design and Fluidics</h3>
+							<span class="image main">
+								<img src="images/Mesodyne/Calorimeter/img1.png" alt="" />
+								<p style="text-align:center"></p>
+							</span> 
+
+							<span class="image main">
+								<img src="images/Mesodyne/Calorimeter/img6.png" alt="" />
+								<p style="text-align:center"></p>
+							</span>
+
+							<h3>Mathematical Modeling</h3>
+							<p></p>
+							<span class="image main">
+								<img src="images/Mesodyne/Calorimeter/img2.png" alt="" />
+								<p style="text-align:center"></p>
+							</span>
+							
+							<h3>Data Analysis</h3>
+							<p></p>
+							<span class="image main">
+								<img src="images/Mesodyne/Calorimeter/img5.png" alt="" />
+								<p style="text-align:center"></p>
+							</span>
+						</article>
+
+						
+						<!-- Mesodyne Flexure Post -->
+						<article id="mesodyne_flexure">
+							<h2 class="major">Flexure Stage for Optical Posts</h2>
+							<h3>Problem Statement</h3>
+							<p>I needed to alleviate one translational degree of freedom on a facuum flange, but simultaneously constrain the other 2 translational and 3 rotational ones. The total weight supported by the flexure stage would amount to 10 kg, while the direction of compliance would be perpendicular to that loading. Additionally, this would be an adjustable extension, allowing for an arbitrary but rigid positioning of the flange in 3d space.</p>
+						
+							<h3>Design Considerations</h3>
+							<p>Applying the leaf flexure formula, I was able to calculate the total elasticity of the flexure as a function of length, width, and thickness. The length was chosen to be a standard width for off-the-shelf spring steel rolls, and the thickness was chosen such that the weight loading would not cause buckling in the material. The optimal solution was found by parameter searching over these discrete variables in a spreadsheet, and checking against our machinist's practical intuition.</p>
+							<span class="image main">
+								<img src="images/Mesodyne/Flexure/img1.png" alt="" />
+								<p style="text-align:center">Showing the translational degree of compliance. Thumb screws help tighten the components together to constrain the pitch angle and z-height.</p>
+							</span> 
+
+							<h3> Machining</h3>
+							<p>The aluminium connectors were machined using the advanced cut-to-size-then-drill-some-holes fabrication technique. The leaf flexures on the other hand were the most labor intensive to machine. Spring steel is way less forgiving than aluminum when it comes to drilling holes.</p>
+							<span class="image main">
+								<img src="images/Mesodyne/Flexure/img4.jpg" alt="" />
+								<p style="text-align:center">This first approach of using a plastic jig held in a bench vise to drill through individual springs -- failed spectacularly.</p>
+							</span>
+							<span class="image main">
+								<img src="images/Mesodyne/Flexure/img3.jpg" alt="" />
+								<p style="text-align:center">A second approach used a mill and some sacrificial aluminium pieces to hold the steel in place. While this produced a more precise component, many drill bits were dulled in the process.</p>
+							</span> 
+
+							<h3>Result</h3>
+							<p>We discovered a minor issue where the thumb screws could not clamp down with enough force when hand tighetened, but this was fixed by replacing them with socket head screws, and inserting grip washers in between the aluminum components. The flexure became a convenient part of our experimental setup.</p>
+							<span class="image main">
+								<img src="images/Mesodyne/Flexure/img6.jpg" alt="" />
+								<p style="text-align:center">The flexure stage attached to the vacuum flange and mounted on an optical table.</p>
+							</span> 
+
+							</span>
 						</article>
 						
 
