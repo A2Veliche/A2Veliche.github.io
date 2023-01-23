@@ -48,30 +48,30 @@
 							The first iteration of the controller was based on an Arduino Due protoype PCB with a Sensirion flow meter as the feedback device. Both speed control and flow rate control were implemented in a cascading PID loop. This setup was problematic because the flow meter measurement would be affected by turbulent air exiting the blower, and the minimum fan speed was still too powerful for our needs.
 							<span class="image main">
 								<img src="images/Mesodyne/PCB/img1.jpg" alt="" />
-								<p style="text-align:center"></p>
+								<p style="text-align:center">Connecting all the essential components for the first time and testing their compatibility.</p>
 							</span>
 							The second iteration included a laminar flow pipe between the blower and the flow meter, air bleed ports in front of the blower to cut down on flow rate, and a different controller - an Adafruit Bluefruit nRF52. The more powerful controller allowed for much smoother operation of the blower, and this device worked spectacularly well. However the entire device required 48W to run, and this would gobble up our power budget.
 							<!-- <p></p> -->
 							<span class="image main">
 								<img src="images/Mesodyne/PCB/img3.jpg" alt="" />
-								<p style="text-align:center"></p>
+								<p style="text-align:center">Components going from left to right are the blower fan, motor driver, control circuit (with a missing MCU), and digital flow sensor.</p>
 							</span>
 							For the next version, I reverted back to the Arduino Nano for its greater availability, used a less powerful blower fan from Micronel, and a simpler full-bridge motor driver instead of the power-hungry BLDC motor driver board. These assembled into the PCB shown below. This board would be equipped with a 12-bit ADC module and would be back-compatible with the previous blower. However these features were never used because of some missing traces and incorrect wiring of the I2C signal lines.
 							<span class="image main">
 								<img src="images/Mesodyne/PCB/img8.jpg" alt="" />
-								<p style="text-align:center"></p>
+								<p style="text-align:center">Notice how beautiful the board looks? Most of it is unusable due to bad I2C signal line tracing.</p>
 							</span>
 							By this point, most of the components were working out for us, but we needed to look further ahead in the future. We decided to design the next prototype around the STM32F07 family of MCUs because of their availability and accessibility. The board began accumulating additional features such as thermocouple chips, analog inuputs from thermistors, flash memory, multiple communication lines, analog pressure sensors, and power MOSFETs. After weeks of work and revisions in KiCAD, we came up with a solution that would be functionally equivalent to PCB v1, only supersede it in processing power and number of peripherals.
 							<span class="image main">
 								<img src="images/Mesodyne/PCB/img10.jpg" alt="" />
-								<p style="text-align:center"></p>
+								<p style="text-align:center">Control board v2 is the green board on the left. The banana is for scale. Nucleo-64 dev board (white) is for programming the STM32 through ST-LINK protocol.</p>
 							</span> 	
 
 							<h3>Benchtop Performance</h3>
 							<p>Designing the electronics was a time-consuming task, but even more effort was required during the tuning process for the blower. The device would work perfectly during the middle of the run when the burner had already heated up to its equilibirum temperature, but chaos broke out during the burner's cold ignition and startup. Following ignition, as the flame developed in size and stability the blower needed to supply a constant air stream, but instead the motor developed thermoacoustic vibrations due to its lack of sufficient back-pressure. As a result, combustion would oscillate violently, and no PID tuning would be able to fully dampen them. </p>
 							<span class="image main">
 								<img src="images/Mesodyne/PCB/img11.jpg" alt="" />
-								<p style="text-align:center"></p>
+								<p style="text-align:center">Shown above is the measured vs. setpoint flowrate within the first few minutes following ignition. Notice how the initial chaotic behaviour slowly transitions into a steady convergence as the burner heats up.</p>
 							</span>
 							
 							<h3>Conclusion</h3>
