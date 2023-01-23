@@ -87,39 +87,45 @@
 							<h2 class="major">Thermal Emissions Calorimeter</h2>
 							<p>Disclaimer: many aspects of this project not disclosed here are confidential and proprietary to Mesodyne.</p>
 							<h3>Problem</h3>
-							<p>The goal of desingning a calorimeter was to measure the total power emitted from a burner in the form of thermal radiation. The surface of the calorimeter would be coated with black paint to absorb nearly all frequencies of light, and reflect none back. Unlike a spectrometer, this calorimeter would integrate thermal emissions across its entire collector area, and through accurate measurements of the inflow and outflow water temperatures, the power would be reported as one scalar value. </p>
+							<p>The goal of desingning a calorimeter was to measure the total power emitted from a burner in the form of thermal radiation. The surface of the calorimeter would be coated with black paint to absorb nearly all frequencies of light and reflect none back. Unlike a spectrometer, this calorimeter would integrate thermal emissions across its entire collector area, and through accurate measurements of the inflow and outflow water temperatures, the power would be reported as one scalar value. The challenge was to accomplish accurate calorimetry up to 5 Watts, while also accounting for any thermal gains or losses to the environment.</p>
 						
 							<h3>Methodology</h3>
-							<p>A pivotal decision to the calorimeter design was to use a cooling jacket to control the boundary conditions around the collector block. Another key feature of the apparatus was to place cartridge heaters inside the collector block available during calibration.</p>
+							<p>A pivotal decision to the calorimeter design was to use a cooling jacket to control the boundary conditions around the collector block. Another key feature of the apparatus was to place cartridge heaters inside the collector block to be available during calibration. We also decided to use ice water to increase the accuracy of the thermistors while decreasing the internal temperature of the device.</p>
 
-							<h3> CAD Design and Fluidics</h3>
+							<h3> CAD Modeling</h3>
+							The calorimeter cooling jacket was designed to insulate the thermal fluid (cold water) away from atmospheric radiation. There was also the fluid ircuit that needed to be built in order to supply a steady stream of cold water through the collector block. A variety of fabrication techniques were used here which includes SLA 3D printing, 5-axis CNC machining, and manual mill/lathe work.
 							<span class="image main">
 								<img src="images/Mesodyne/Calorimeter/img1.png" alt="" />
-								<p style="text-align:center"></p>
+								<p style="text-align:center">Showing a cross-section and assembly view of the calorimeter. CAD work was done in OnShape.</p>
 							</span> 
 
 							<span class="image main">
 								<img src="images/Mesodyne/Calorimeter/img6.png" alt="" />
-								<p style="text-align:center"></p>
+								<p style="text-align:center">Fluid diagram representing the layout of valves, pumps, gauges, and reservoirs.</p>
 							</span>
 
-							<h3>Mathematical Modeling</h3>
-							<p></p>
-							<!-- <span class="image main">
-								<img src="images/Mesodyne/Calorimeter/img7.png" alt="" />
-								<p style="text-align:center"></p>
-							</span> -->
+							<h3>Construction</h3>
+							<span class="image main">
+								<img src="images/Mesodyne/Calorimeter/img8.png" alt="" />
+								<p style="text-align:center">The water pump cart on the left, the calorimeter apparatus on the right.</p>
+							</span>
+
+							<h3>Modeling and Data Analysis</h3>
+							<p>In parallel with the physical apparatus that was being tested and built, an accurate model needed to be developed to appropriately interpret sensor data. The image below shows a simplified model together with the symbolic placement of temperature probes.</p>
 							<span class="image main">
 								<img src="images/Mesodyne/Calorimeter/img2.png" alt="" />
-								<p style="text-align:center"></p>
+								<p style="text-align:center">Showing the governing heat equation for the final calorimeter iteration. All quantities aside from the radiative heat are either controlled, or they are measured using temperature and flow rate data.</p>
 							</span>
 							
-							<h3>Data Analysis</h3>
-							<p></p>
+							<p>The mathematical model shown above allows for factoring out convective and conductive gains in the final heat measurement. This was ultimately done using a multilinear regression technique on the various temperature gradients responsible for those heat gains.</p>
 							<span class="image main">
 								<img src="images/Mesodyne/Calorimeter/img5.png" alt="" />
-								<p style="text-align:center"></p>
+								<p style="text-align:center">A collection of graphs representing the calibration procedure for the calorimeter. The post-processing step transitions from multiple temperature-time series to a single value representing the burner's radiative output.</p>
 							</span>
+
+							<h3>Conclusion</h3>
+							<p>This calorimeter device turned out to be a success as we were able to measure the burner output with a precision of 5 Watts as required. With this project I learned much about thermalfluids from my peers and co-workers, although I had not taken a course on the subject beforehand.</p>
+
 						</article>
 
 						
@@ -157,8 +163,6 @@
 							</span>
 						</article>
 						
-
-						<!-- Cat Feeder -->
 						<article id="feeder">
 							<h2 class="major">Automatic Cat Feeder</h2>
 							<span class="image main">
@@ -185,12 +189,13 @@
 								<p style="text-align:center"> Testing the prototype</p>
 							</span>
 							<p> The final step was to put the prototype to the test. The house was cold during our departure, so although the stepper motor heated up to around 120 degrees Fahrenehit due to several days of powered use, it didn't burn out in the end.
+							<h3>Results</h3>
 							<p> When we came back the cat was still alive and happy! (although perhaps a bit chubbier)</p>
 						</article>
 
 						<!-- Machining -->
 						<article id="machining">
-							<h2 class="major">Machining</h2>
+							<h2 class="major">Junior Machining Projects</h2>
 							<p>I have been working as a Junior Machinist at the Forsyth machine shop on Northeastern's campus since the spring of 2021. Here are a few projects during which I have employed most of my machining knowledge and learned more.</p>
 
 							<h3>Aesthetic Spinning Top</h3>
@@ -308,7 +313,7 @@
 						</article>
 
 						<!-- Murder Hornet Defense System -->
-						<article id="hivedefense">
+						<!-- <article id="hivedefense">
 							<h2 class="major">Murder hornet defense system</h2>
 
 							<span class="image main">
@@ -471,21 +476,21 @@
 							<td align="right"></td>
 							</tr>
 							</tbody></table>
-
+ -->
 
 						</article>
 
 						<!-- Mahogany Deck -->
-						<article id="deck">
+						<!-- <article id="deck">
 							<h2 class="major">Mahogany Deck</h2>
 							<p>More content will be posted soon!</p>
-						</article>
+						</article> -->
 
 						<!-- DIY CNC Router -->
-						<article id="router">
+						<!-- <article id="router">
 							<h2 class="major">DIY CNC Router</h2>
 							<p>More content will be posted soon!</p>
-						</article>
+						</article> -->
 
 					</div>
 
