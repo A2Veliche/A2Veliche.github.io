@@ -31,8 +31,17 @@
 						<article id="mesodyne_PCB">
 							<h2 class="major">Air Intake Control PCB</h2>
 							<p>Disclaimer: many aspects of this project not disclosed here are confidential and proprietary to Mesodyne.</p>
+
+							<h3>Project Summary</h3>
+							<ul>
+								<li>This project was developing a space/weight efficient blower device to fuel combustion</li>
+								<li>Lengthy experimentation with various blower fans, motor drivers, and flow sensors</li>
+								<li>Incrementally developed skills to design a STM32-based PCB control board</li>
+								<li>Remaining time was spent trying to tune a PID loop to prevent post-ignition thermoacoustic resonance</li>
+							</ul>
+
 							<h3>Problem</h3>
-							<p>As Mesodyne's Lightcell device matured from benchtop testing towards a final product, the propane burner's air supply needed to transition from the lab's air compressor to a more compact solution. The ultimate requirement for such a submodule would be power efficiency, as the Lightcell would eventually become a standalone power generation unit. To address this issue, a high-pressure blower fan was needed, as well as a feedback signal and a controller to guarantee the correct mass flow rate was being delivered. A presistent problem thermoacoustic resonances would occur between the flame and the blower device running under a PID loop.</p>
+							<p>As Mesodyne's Lightcell device matured from benchtop testing towards a final product, the propane burner's air supply needed to transition from the lab's air compressor to a more compact solution. The ultimate requirement for such a submodule would be power efficiency, as the Lightcell would eventually become a standalone power generation unit. To address this issue, a high-pressure blower fan was needed, as well as a feedback signal and a controller to guarantee the correct mass flow rate was being delivered. </p>
 						
 							<h3>Methodology</h3>
 							<p>I began by experimenting with various off-the-shelf blower fans, mass flow sensors, and microcontrollers. The design philosophy was "fail fast, fail often" as I was climbing a steep learning curve into the circuit design world. While developing my first PCBs that would meet the minimum design requirements, I learned 4 incredibly important lessons:
@@ -86,6 +95,15 @@
 						<article id="mesodyne_calorimeter">
 							<h2 class="major">Thermal Emissions Calorimeter</h2>
 							<p>Disclaimer: many aspects of this project not disclosed here are confidential and proprietary to Mesodyne.</p>
+
+							<h3>Project Summary</h3>
+							<ul>
+								<li>Our benchtop burner needed a device to measure radiative heat losses</li>
+								<li>This calorimeter senses radiative heat through thermal gradients across a cooling channel</li>
+								<li>Extensive modeling work was done to understand extraneous heat losses/gains for the system</li>
+								<li>Data post-processing and calibration required special attention</li>
+							</ul>
+
 							<h3>Problem</h3>
 							<p>The goal of desingning a calorimeter was to measure the total power emitted from a burner in the form of thermal radiation. The surface of the calorimeter would be coated with black paint to absorb nearly all frequencies of light and reflect none back. Unlike a spectrometer, this calorimeter would integrate thermal emissions across its entire collector area, and through accurate measurements of the inflow and outflow water temperatures, the power would be reported as one scalar value. The challenge was to accomplish accurate calorimetry up to 5 Watts, while also accounting for any thermal gains or losses to the environment.</p>
 						
@@ -132,8 +150,9 @@
 						<!-- Mesodyne Flexure Post -->
 						<article id="mesodyne_flexure">
 							<h2 class="major">Flexure Stage for Optical Posts</h2>
+
 							<h3>Problem Statement</h3>
-							<p>I needed to alleviate one translational degree of freedom on a facuum flange, but simultaneously constrain the other 2 translational and 3 rotational ones. The total weight supported by the flexure stage would amount to 10 kg, while the direction of compliance would be perpendicular to that loading. Additionally, this would be an adjustable extension, allowing for an arbitrary but rigid positioning of the flange in 3d space.</p>
+							<p>I needed to alleviate one translational degree of freedom on a vacuum flange, but simultaneously constrain the other 2 translational and 3 rotational ones. The total weight supported by the flexure stage would amount to 10 kg, while the direction of compliance would be perpendicular to that loading. Additionally, this would be an adjustable extension, allowing for an arbitrary but rigid positioning of the flange in 3d space.</p>
 						
 							<h3>Design Considerations</h3>
 							<p>Applying the leaf flexure formula, I was able to calculate the total elasticity of the flexure as a function of length, width, and thickness. The length was chosen to be a standard width for off-the-shelf spring steel rolls, and the thickness was chosen such that the weight loading would not cause buckling in the material. The optimal solution was found by parameter searching over these discrete variables in a spreadsheet, and checking against our machinist's practical intuition.</p>
@@ -154,11 +173,12 @@
 							</span> 
 
 							<h3>Result</h3>
-							<p>We discovered a minor issue where the thumb screws could not clamp down with enough force when hand tighetened, but this was fixed by replacing them with socket head screws, and inserting grip washers in between the aluminum components. The flexure became a convenient part of our experimental setup.</p>
+							<p>We discovered a minor issue where the thumb screws could not clamp down with enough force when hand tighetened, but this was fixed by replacing them with socket head screws, and inserting grip washers in between the aluminum components. </p>
 							<span class="image main">
 								<img src="images/Mesodyne/Flexure/img6.jpg" alt="" />
 								<p style="text-align:center">The flexure stage attached to the vacuum flange and mounted on an optical table.</p>
 							</span> 
+							<p>The flexure became a convenient part of our experimental setup.</p>
 
 							</span>
 						</article>
@@ -167,7 +187,7 @@
 							<h2 class="major">Automatic Cat Feeder</h2>
 							<span class="image main">
 								<img src="images/Automatic Cat Feeder/feeder_cat.jpg" alt="" />
-								<p style="text-align:center"> Feed me hooman! </p>
+								<p style="text-align:center"> Feed me hooman! (this is Zephyr)</p>
 							</span>
 
 							<h3>Description</h3>
@@ -223,7 +243,16 @@
 						<article id="pendulum">
 							<h2 class="major">Self-balancing inverted pendulum</h2>
 							<p>See a <a href="https://youtu.be/0dboMWIbN-k">demo video</a> of this project in action.</p>
-							<h3>Inception</h3>
+
+							<h3>Project Summary</h3>
+							<ul>
+								<li>I wanted to make a self-balancing inverted pendulum on a cart machine becasue it would be so cool</li>
+								<li>With this project I learned the basics of machining, tolerancing, power budgeting, and electronics</li>
+								<li>Computer simulations and rapid prototyping were used to design a flexured linear slide</li>
+								<li>Used Simulink and knowledge of classic control theory to design a Raspberry-Pi based PID controller</li>
+							</ul>
+
+							<h3>Motivation</h3>
 							This project first started at an engineering summer camp taught by MIT Professor Alex Slocum where we were instructed to find a problem and apply the FUNDAMENTAL principles of design to the entire process. This project grew into a larger robotics endeavor where I learned PID control alrogithms, electronics, machining, prototyping, felxure design, and acquired many more analytical skills.</p>
 
 							<h3>Description</h3>
@@ -307,7 +336,7 @@
 						<h3>Results</h3>
 
 						As of now, the linear stage is up and running. There is a PID loop running through an Arduino-Uno which takes in encoder data from the motor and adjusts the motor input voltage accordingly. The motor that is used is a <a href="https://www.vexrobotics.com/217-3371.html">VEX Mini Cim motor</a>, and the motor controller is a <a href="https://www.vexrobotics.com/217-9191.html">Talon SPX</a>. You can <a href="https://youtu.be/iQwe4ZnMEd0">see a video</a> of the linear stage being controlled by a potentiometer position.
-						In the near future I hope to get the pendulum installed and another fedback loop running through the Arduino to monitor its angular position. Then I will be able to control the pendulum setting a position and letting the machine balance itself!
+						In the near future I hope to get the pendulum installed and another feedback loop running through the Arduino to monitor its angular position. Then I will be able to control the pendulum setting a position and letting the machine balance itself!
 
 						<!-- <iframe width="420" height="315" src="https://youtu.be/iQwe4ZnMEd0"></iframe> -->
 
