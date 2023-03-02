@@ -84,7 +84,7 @@
 							</span>
 							
 							<h3>Conclusion</h3>
-							<p>While the system as configured is controllable, a PID loop coupled to an unknown system (the ignited burner) cannot be tuned to optimality seperately. One solution is to weaken the coupling between the blower and burner by means of a physical redesign of either one. Another solution is to run holisitic system identification during operation, but I found most PID auto-tuners to be too primitive for this. Potentially, a solution like reinforcement learning could be implemented since this powerful tenchique requires no information about the system, only the bounds of operation and a cost function.</p>
+							<p>While the system as configured is controllable, a PID loop coupled to an unknown system (the ignited burner) cannot be tuned to optimality in seclusion. One easy solution is to weaken the coupling between the blower and burner by means of a dampening component or greater physical separation. The best path forward, in my optinion, is to gain a better understanding of the thermo-acoustic system through literature review and then implement a Hardware-in-the-Loop (HIL) simulation in Simulink to develop the best controller for the device.</p>
 							<!-- <span class="image main">
 								<img src="images/Mesodyne/PCB/img5.jpg" alt="" />
 								<p style="text-align:center"></p>
@@ -111,7 +111,7 @@
 							<p>A pivotal decision to the calorimeter design was to use a cooling jacket to control the boundary conditions around the collector block. Another key feature of the apparatus was to place cartridge heaters inside the collector block to be available during calibration. We also decided to use ice water to increase the accuracy of the thermistors while decreasing the internal temperature of the device.</p>
 
 							<h3> CAD Modeling</h3>
-							The calorimeter cooling jacket was designed to insulate the thermal fluid (cold water) away from atmospheric radiation. There was also the fluid ircuit that needed to be built in order to supply a steady stream of cold water through the collector block. A variety of fabrication techniques were used here which includes SLA 3D printing, 5-axis CNC machining, and manual mill/lathe work.
+							The calorimeter cooling jacket was designed to insulate the thermal fluid (cold water) away from atmospheric radiation. There was also the fluid circuit that needed to be built in order to supply a steady stream of cold water through the collector block. A variety of fabrication techniques were used here which includes SLA 3D printing, 5-axis CNC machining, and manual mill/lathe work.
 							<span class="image main">
 								<img src="images/Mesodyne/Calorimeter/img1.png" alt="" />
 								<p style="text-align:center">Showing a cross-section and assembly view of the calorimeter. CAD work was done in OnShape.</p>
