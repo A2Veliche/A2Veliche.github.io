@@ -27,6 +27,73 @@
 				<!-- Main -->
 					<div id="main">
 
+						<!-- Fulfil Physics -->
+						<article id="fulfil_physics">
+							<h2 class="major">Conveyor Dispense Physics</h2>
+							<h3>Project Summary</h3>
+						</article>
+
+						<!-- Fulfil Hot Knife -->
+						<article id="fulfil_bead">
+							<h2 class="major">Joining Bead Iterative Design</h2>
+
+							<h3>Problem Statement</h3>
+							<p>An engineering challenge at Fulfil was to increase the tensile load capacity of a round belt bead-chain assembly by re-designing a crimp that would secure the two loose ends together. This would allow the belt to have higher cycle times thereby increasing its component lifecycle. Previous attempts to join the two ends of round belting together would meet with failure within 2 months of operation, thereby voiding a $500 assembly and precious amounts of manual work. Space was at a premium in this assembly, as any solution would need to fit within the contours of a standard 12mm diameter bead to ensure proper tolerances with the bead chain pulleys. Off-the-shelf solutions such as crimps or adhesives were found to be insufficient for our purposes, so a rapid prototyping approach was pursued.</p>
+
+							<h3>Assessment</h3>
+
+							The initial joining bead looked just like the normal ones (black injection-molded plastic) shown in the figure below, only with two set screws on the top to fix the ends of the belting together.
+							<span class="image main"  width="80%">
+								<img src="images/Fulfil/JoiningBead/cracked2.jpg" alt=""/>
+								<p style="text-align:center">The bead chain tended to crack in some places due to temperature-induced stresses, as well as break apart at the joining bead due to improper bonding.</p>
+							</span>
+
+							Reasons for failue:
+							<ul>
+								<li>Tensile loads above 15lbs would cause outer sheath to crack at the contact point with set screws. Loosening or tightening set screws would decrease load capacity.</li>
+								<li>At similar forces, the loose inner sheath (nylon) would slip inside the outer sheath (polyurethane) reducing the belt's overall capacity.</li>
+								<li>The small radius of the bead combined with the joining geometery only allowed for a maximum contact length of 5mm. This presented an undersized superglue bonding surface. </li>
+							</ul>
+
+							
+							<h3>Iterations</h3>
+
+							<h4>Concept # 1 - Set Screws</h4>
+							The first attempt at fixing these inadequacies was to improve the internal geometry of the bead to work with set screws as before. The Bambu X1 Carbon 3D printer was used to print all these prototypes out of PLA. It was found that using set screws caused damage to the polyurethane sheath, limiting the tensile strength to the toughness of the material intself. No changes to internal cable routing would improve the bead's performance. Furthermore, tightening the set screw would apply stresses to the 3d printed bead causing it to crack open and fail.
+
+							<span class="image main"  width="80%">
+								<img src="images/Fulfil/JoiningBead/initial_design.jpg" alt=""/>
+								<p style="text-align:center">The initial design consisted of two halves that would join together and secure onto their respective cable ends using set screw pressure.</p>
+							</span>
+
+							<h4>Concept # 2 - Capstan Friction</h4>
+							My second attempt used the concept of capstan friction to secure the belt ends together. I wanted to maximize the wrap-around angle insie the bead as it would exponentially increase the friction force. While this approach worked better than before, now withstanding comperable loads to the original beads, it would still fail by the internal layer separating from the outer one. Any attempt to melt or glue the free ends would lead to the same failure mode.
+
+							<span class="image main"  width="80%">
+								<img src="images/Fulfil/JoiningBead/intermediate_design.jpg" alt=""/>
+								<p style="text-align:center">The capstan joining beads used wrap-around friction and cable tension to pull everything together.</p>
+							</span>
+
+							<h4>Concept # 3 - Bolt compression</h4>
+							By now it was clear that any solution would need to address the layer separation issue present in the last iteration. Instead of relying on external friction forces, I changed gears to focusing on clampig the layers together. As a result, a completey new concept was born that was driven by bolt tension. Tightening the flat-headed screw shown in the figure below would apply compression the belting, squashing it in place and preloading it such that tensile loads would not loosen its fit.
+
+							<span class="image main"  width="80%">
+								<img src="images/Fulfil/JoiningBead/final_design.png" alt=""/>
+								<p style="text-align:center">The final design used a flat-headed screw on one side and a hex nut on the other to compress the belting into the bead walls for maximum tightness. This time the bead was made of one piece.</p>
+							</span>
+
+							<h3>Conclusion</h3>
+
+							The final design worked for any size belt and, when printed out of polycarbonate, could withstand tension forces up to 250N, about twice as much as before. The belts no longer snapped at their joining bead connection for the remaining duration of 4 months while I was still at the company.
+
+						</article>
+
+						<!-- Fulfil Torsional Pendulum -->
+						<article id="fulfil_pendulum">
+							<h2 class="major">Torsional Pendulum</h2>
+							<h3>Project Summary</h3>
+						</article>
+
 						<!-- Mesodyne Control PCB -->
 						<article id="mesodyne_PCB">
 							<h2 class="major">Air Intake Control PCB</h2>
