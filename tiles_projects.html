@@ -29,9 +29,80 @@
 
 						<!-- Fulfil Physics -->
 						<article id="fulfil_physics">
-							<h2 class="major">Conveyor Dispense Physics</h2>
+							<h2 class="major">Physics simulations of drop dispensing</h2>
+
 							<h3>Project Summary</h3>
+							<p>Fulfil is an automation company that makes robotic fulfillment centers. A core part of the company's technology is having store keeping units (SKU) dispense off of tray conveyors into line-following bags, circumventing the need for expensive robotic pick-and-place units. The throughput of the store depends on a host of factors, one of which is how precisely the robotic tray can dispense a SKU item into the bag. The point of this project was to help the factory control algorithm predict <b>how the item will fall into the bag</b> given the following variables</p>
+							<ul>
+								<li>Nominal vertical drop distance into the bag</li>
+								<li>Item dimensions, weight distribution, and shape</li>
+								<li>Conveyor speed upon dispense</li>
+								<li>Friction coefficient between item surface and conveyor belt</li>
+							</ul>
+							Furthermore, the way the SKU will settle into the bag depended on what was in the bag already and in what position it would make contact with those items. Overall, this project became an essential collaboration between multiple software teams, as it involved databases, computer vision, firmware, and actuation. At the heart of it all was empirical data collected through countless hours of manual testing, and Lagrangian mechanics to unify those results into a successful theory.
+							
+							<p></p>
+							<h3>Empirical Testing</h3>
+							<p>I spent the first month of this project working with the actual hardware and observing how different item shapes and sizes would impact their dispense mechanics. When an item falls off a conveyor, its motion is a combination of translation along a parabolic trajectory, and rotation around its center of gravity along the dispense plane. Leading up to the moment that the item begins its free-fall is a phase where energy is exchanged between the item and the conveyor by means of frictional and normal forces.</p>
+
+							<span class="image main"  width="80%">
+								<img src="images/Fulfil/Physics/falling_montage.png" alt=""/>
+								<p style="text-align:center">Pasta box starts translating at a constant horizontal velocity (left pane), after rotating breaks off from the conveyor edge (center pane), after free-fall lands on a third corner (right pane) ultimately settling on its top face.</p>
+							</span>
+
+							The same tests were carried out for several more items including red bull cans, bottled water, cereal boxes, and tuna cans. Each trial was repeated 5 times for 4 different bag heights between 400mm and 60mm and 3 different dispense speeds (100mm/s, 200mm/s, 300mm/s). The dependent variables kept track of were the horizontal displacement of the item's center of mass, the impact location, and which face it settled on.
+
+							<span class="image main"  width="80%">
+								<img src="images/Fulfil/Physics/falling_montage_2.png" alt=""/>
+								<p style="text-align:center">A marked red bull can being dispensed at a lower speed. Compared to the pasta box, it rotates less and translates along its length more as it breaks off from the conveyor.</p>
+							</span>
+
+							All drop tests were conducted into a pan of granular media (such as lentils) to instantly deaden the kinetic energy of the falling item through absorbtion and momentum transfer. The craters left in the media were also essential in determining the item's impact location.
+							
+							<p></p>
+							<h3>Lagrangian Mechanics</h3>
+
+							The physical interaction between the item and the conveyor belt changes over time due to breaking of static friction and the transition into a dynamic friction regime. The first and second mechanisms of motion were named the "no-slip" phase and the "slip" phase, and each had its associated differential equations and boundary conditions.
+
+							<span class="image main"  width="80%">
+								<img src="images/Fulfil/Physics/free_body_diagram.png" alt=""/>
+								<p style="text-align:center">A free body diagram of a prismatic object being dispensed starting at the circular edge of the conveyor. The conveyor is rotating clockwise with a constant surface speed.</p>
+							</span>
+
+							<span class="image main"  width="80%">
+								<img src="images/Fulfil/Physics/equations.png" alt=""/>
+								<p style="text-align:center">Pair of equations contrasting the dynamics of the two dispense phases. The static friction regime requires the bottom left inequality be satisfied, while the kinetic friction regime requires a positive normal force.</p>
+							</span>
+
+							By implementing a Runge-Kutta numerical solver in Python, I was able to find solutions to these equations after substituting in item properties and measurable friction coefficients.
+
+							<p></p>
+							<h3>Model Verification</h3>
+
+							<span class="image main"  width="80%">
+								<img src="images/Fulfil/Physics/energy_diagrams.png" alt=""/>
+								<p style="text-align:center">Running the simulation in Python and plotting the system energy and forces allowed for quick debugging.</p>
+							</span>
+
+							<span class="image main"  width="80%">
+								<img src="images/Fulfil/Physics/model_verification_chex.png" alt=""/>
+								<p style="text-align:center">Verifying the Python physics model against empirical data (error bars). Green bands show uncertainty in the model given 10% noise in the problem's stating parameters. The match is nearly perfect.</p>
+							</span>
+
+							<span class="image main"  width="80%">
+								<img src="images/Fulfil/Physics/model_continuity.png" alt=""/>
+								<p style="text-align:center">Checking model continuity and stability using contour diagrams. For each value of speed and static friction coefficient, the model returns a different final motion parameter (angular speed, overhang length, etc). Notice the bifurcation happening at low friction values.</p>
+							</span>
+
+							<p></p>
+							<h3>Implementation</h3>
+
+							Given the analyses shown above and the multiple comparisons to empirical data, the model was trustworthy enough to provide a high-fidelity prediction of what position an item would end up in once it fell into a bag. With this information, the computer vision team could find a suitable item target and attempt to dispense it in that location with a higher confidence than before. To implement the algorithm in the factory control codebase I needed to convert all the Python code into C#. Because of the lack of support on the scientific computing front, I ended up having to write my own Runge-Kutta numerical solver that could use event function and run on multi-dimensional vector functions. I also needed to simplify my code by a lot in order to optimize it for production. 
+
+
 						</article>
+
+						
 
 						<!-- Fulfil Hot Knife -->
 						<article id="fulfil_bead">
@@ -48,18 +119,18 @@
 								<p style="text-align:center">The bead chain tended to crack in some places due to temperature-induced stresses, as well as break apart at the joining bead due to improper bonding.</p>
 							</span>
 
-							Reasons for failue:
+							Reasons for failure:
 							<ul>
 								<li>Tensile loads above 15lbs would cause outer sheath to crack at the contact point with set screws. Loosening or tightening set screws would decrease load capacity.</li>
 								<li>At similar forces, the loose inner sheath (nylon) would slip inside the outer sheath (polyurethane) reducing the belt's overall capacity.</li>
-								<li>The small radius of the bead combined with the joining geometery only allowed for a maximum contact length of 5mm. This presented an undersized superglue bonding surface. </li>
+								<li>The small radius of the bead combined with the joining geometry only allowed for a maximum contact length of 5mm. This presented an undersized superglue bonding surface. </li>
 							</ul>
 
 							
 							<h3>Iterations</h3>
 
 							<h4>Concept # 1 - Set Screws</h4>
-							The first attempt at fixing these inadequacies was to improve the internal geometry of the bead to work with set screws as before. The Bambu X1 Carbon 3D printer was used to print all these prototypes out of PLA. It was found that using set screws caused damage to the polyurethane sheath, limiting the tensile strength to the toughness of the material intself. No changes to internal cable routing would improve the bead's performance. Furthermore, tightening the set screw would apply stresses to the 3d printed bead causing it to crack open and fail.
+							The first attempt at fixing these inadequacies was to improve the internal geometry of the bead to work with set screws as before. The Bambu X1 Carbon 3D printer was used to print all these prototypes out of PLA. It was found that using set screws caused damage to the polyurethane sheath, limiting the tensile strength to the toughness of the material in itself. No changes to internal cable routing would improve the bead's performance. Furthermore, tightening the set screw would apply stresses to the 3d printed bead causing it to crack open and fail.
 
 							<span class="image main"  width="80%">
 								<img src="images/Fulfil/JoiningBead/initial_design.jpg" alt=""/>
@@ -67,7 +138,7 @@
 							</span>
 
 							<h4>Concept # 2 - Capstan Friction</h4>
-							My second attempt used the concept of capstan friction to secure the belt ends together. I wanted to maximize the wrap-around angle insie the bead as it would exponentially increase the friction force. While this approach worked better than before, now withstanding comperable loads to the original beads, it would still fail by the internal layer separating from the outer one. Any attempt to melt or glue the free ends would lead to the same failure mode.
+							My second attempt used the concept of capstan friction to secure the belt ends together. I wanted to maximize the wrap-around angle inside the bead as it would exponentially increase the friction force. While this approach worked better than before, now withstanding comparable loads to the original beads, it would still fail by the internal layer separating from the outer one. Any attempt to melt or glue the free ends would lead to the same failure mode.
 
 							<span class="image main"  width="80%">
 								<img src="images/Fulfil/JoiningBead/intermediate_design.jpg" alt=""/>
@@ -75,7 +146,7 @@
 							</span>
 
 							<h4>Concept # 3 - Bolt compression</h4>
-							By now it was clear that any solution would need to address the layer separation issue present in the last iteration. Instead of relying on external friction forces, I changed gears to focusing on clampig the layers together. As a result, a completey new concept was born that was driven by bolt tension. Tightening the flat-headed screw shown in the figure below would apply compression the belting, squashing it in place and preloading it such that tensile loads would not loosen its fit.
+							By now it was clear that any solution would need to address the layer separation issue present in the last iteration. Instead of relying on external friction forces, I changed gears to focusing on clamping the layers together. As a result, a completely new concept was born that was driven by bolt tension. Tightening the flat-headed screw shown in the figure below would apply compression the belting, squashing it in place and preloading it such that tensile loads would not loosen its fit.
 
 							<span class="image main"  width="80%">
 								<img src="images/Fulfil/JoiningBead/final_design.png" alt=""/>
@@ -104,24 +175,24 @@
 								<li>This project was developing a space/weight efficient blower device to fuel combustion</li>
 								<li>Lengthy experimentation with various blower fans, motor drivers, and flow sensors</li>
 								<li>Incrementally developed skills to design a STM32-based PCB control board</li>
-								<li>Remaining time was spent trying to tune a PID loop to prevent post-ignition thermoacoustic resonance</li>
+								<li>Remaining time was spent trying to tune a PID loop to prevent post-ignition thermo-acoustic resonance</li>
 							</ul>
 
 							<h3>Problem</h3>
-							<p>As Mesodyne's Lightcell device matured from benchtop testing towards a final product, the propane burner's air supply needed to transition from the lab's air compressor to a more compact solution. The ultimate requirement for such a submodule would be power efficiency, as the Lightcell would eventually become a standalone power generation unit. To address this issue, a high-pressure blower fan was needed, as well as a feedback signal and a controller to guarantee the correct mass flow rate was being delivered. </p>
+							<p>As Mesodyne's Lightcell device matured from bench-top testing towards a final product, the propane burner's air supply needed to transition from the lab's air compressor to a more compact solution. The ultimate requirement for such a submodule would be power efficiency, as the Lightcell would eventually become a standalone power generation unit. To address this issue, a high-pressure blower fan was needed, as well as a feedback signal and a controller to guarantee the correct mass flow rate was being delivered. </p>
 						
 							<h3>Methodology</h3>
-							<p>I began by experimenting with various off-the-shelf blower fans, mass flow sensors, and microcontrollers. The design philosophy was "fail fast, fail often" as I was climbing a steep learning curve into the circuit design world. While developing my first PCBs that would meet the minimum design requirements, I learned 4 incredibly important lessons:
+							<p>I began by experimenting with various off-the-shelf blower fans, mass flow sensors, and micro-controllers. The design philosophy was "fail fast, fail often" as I was climbing a steep learning curve into the circuit design world. While developing my first PCBs that would meet the minimum design requirements, I learned 4 incredibly important lessons:
 							<ul>
 								<li>Before soldering a new circuit or using a new component, always test it on a breadboard.</li>
 								<li>Do not forget to check continuity or shorts before applying power.</li>
-								<li>Avoid crowding components together unneccessarially.</li>
+								<li>Avoid crowding components together unnecessarily.</li>
 								<li>Actually read the datasheet.</li>
 							</ul>
 							Essentially, I realized the importance of testing each assumption before jumping to conclusions. I learned this the hard way - by frying two Arduino Nano's, two Adafruit Bluefruit nRF52's, one Arduino Mega, two motor driver chips, and the USB adapter on my Lenovo laptop!</p>
 
 							<h3> Iterations and Prototyping </h3>
-							The first iteration of the controller was based on an Arduino Due protoype PCB with a Sensirion flow meter as the feedback device. Both speed control and flow rate control were implemented in a cascading PID loop. This setup was problematic because the flow meter measurement would be affected by turbulent air exiting the blower, and the minimum fan speed was still too powerful for our needs.
+							The first iteration of the controller was based on an Arduino Due prototype PCB with a Sensirion flow meter as the feedback device. Both speed control and flow rate control were implemented in a cascading PID loop. This setup was problematic because the flow meter measurement would be affected by turbulent air exiting the blower, and the minimum fan speed was still too powerful for our needs.
 							<span class="image main">
 								<img src="images/Mesodyne/PCB/img1.jpg" alt="" />
 								<p style="text-align:center">Connecting all the essential components for the first time and testing their compatibility.</p>
@@ -137,21 +208,21 @@
 								<img src="images/Mesodyne/PCB/img8.jpg" alt="" />
 								<p style="text-align:center">Notice how beautiful the board looks? Most of it is unusable due to bad I2C signal line tracing.</p>
 							</span>
-							By this point, most of the components were working out for us, but we needed to look further ahead in the future. We decided to design the next prototype around the STM32F07 family of MCUs because of their availability and accessibility. The board began accumulating additional features such as thermocouple chips, analog inuputs from thermistors, flash memory, multiple communication lines, analog pressure sensors, and power MOSFETs. After weeks of work and revisions in KiCAD, we came up with a solution that would be functionally equivalent to PCB v1, only supersede it in processing power and number of peripherals.
+							By this point, most of the components were working out for us, but we needed to look further ahead in the future. We decided to design the next prototype around the STM32F07 family of MCUs because of their availability and accessibility. The board began accumulating additional features such as thermocouple chips, analog inputs from thermistors, flash memory, multiple communication lines, analog pressure sensors, and power MOSFETs. After weeks of work and revisions in KiCAD, we came up with a solution that would be functionally equivalent to PCB v1, only supersede it in processing power and number of peripherals.
 							<span class="image main">
 								<img src="images/Mesodyne/PCB/img10.jpg" alt="" />
 								<p style="text-align:center">Control board v2 is the green board on the left. The banana is for scale. Nucleo-64 dev board (white) is for programming the STM32 through ST-LINK protocol.</p>
 							</span> 	
 
 							<h3>Benchtop Performance</h3>
-							<p>Designing the electronics was a time-consuming task, but even more effort was required during the tuning process for the blower. The device would work perfectly during the middle of the run when the burner had already heated up to its equilibirum temperature, but chaos broke out during the burner's cold ignition and startup. Following ignition, as the flame developed in size and stability the blower needed to supply a constant air stream, but instead the motor developed thermoacoustic vibrations due to its lack of sufficient back-pressure. As a result, combustion would oscillate violently, and no PID tuning would be able to fully dampen them. </p>
+							<p>Designing the electronics was a time-consuming task, but even more effort was required during the tuning process for the blower. The device would work perfectly during the middle of the run when the burner had already heated up to its equilibrium temperature, but chaos broke out during the burner's cold ignition and startup. Following ignition, as the flame developed in size and stability the blower needed to supply a constant air stream, but instead the motor developed thermo-acoustic vibrations due to its lack of sufficient back-pressure. As a result, combustion would oscillate violently, and no PID tuning would be able to fully dampen them. </p>
 							<span class="image main">
 								<img src="images/Mesodyne/PCB/img11.jpg" alt="" />
-								<p style="text-align:center">Shown above is the measured vs. setpoint flowrate within the first few minutes following ignition. Notice how the initial chaotic behaviour slowly transitions into a steady convergence as the burner heats up.</p>
+								<p style="text-align:center">Shown above is the measured vs. set-point flow rate within the first few minutes following ignition. Notice how the initial chaotic behavior slowly transitions into a steady convergence as the burner heats up.</p>
 							</span>
 							
 							<h3>Conclusion</h3>
-							<p>While the system as configured is controllable, a PID loop coupled to an unknown system (the ignited burner) cannot be tuned to optimality in seclusion. One easy solution is to weaken the coupling between the blower and burner by means of a dampening component or greater physical separation. The best path forward, in my optinion, is to gain a better understanding of the thermo-acoustic system through literature review and then implement a Hardware-in-the-Loop (HIL) simulation in Simulink to develop the best controller for the device.</p>
+							<p>While the system as configured is controllable, a PID loop coupled to an unknown system (the ignited burner) cannot be tuned to optimality in seclusion. One easy solution is to weaken the coupling between the blower and burner by means of a dampening component or greater physical separation. The best path forward, in my opinion, is to gain a better understanding of the thermo-acoustic system through literature review and then implement a Hardware-in-the-Loop (HIL) simulation in Simulink to develop the best controller for the device.</p>
 							<!-- <span class="image main">
 								<img src="images/Mesodyne/PCB/img5.jpg" alt="" />
 								<p style="text-align:center"></p>
@@ -172,7 +243,7 @@
 							</ul>
 
 							<h3>Problem</h3>
-							<p>The goal of desingning a calorimeter was to measure the total power emitted from a burner in the form of thermal radiation. The surface of the calorimeter would be coated with black paint to absorb nearly all frequencies of light and reflect none back. Unlike a spectrometer, this calorimeter would integrate thermal emissions across its entire collector area, and through accurate measurements of the inflow and outflow water temperatures, the power would be reported as one scalar value. The challenge was to accomplish accurate calorimetry up to 5 Watts, while also accounting for any thermal gains or losses to the environment.</p>
+							<p>The goal of designing a calorimeter was to measure the total power emitted from a burner in the form of thermal radiation. The surface of the calorimeter would be coated with black paint to absorb nearly all frequencies of light and reflect none back. Unlike a spectrometer, this calorimeter would integrate thermal emissions across its entire collector area, and through accurate measurements of the inflow and outflow water temperatures, the power would be reported as one scalar value. The challenge was to accomplish accurate calorimetry up to 5 Watts, while also accounting for any thermal gains or losses to the environment.</p>
 						
 							<h3>Methodology</h3>
 							<p>A pivotal decision to the calorimeter design was to use a cooling jacket to control the boundary conditions around the collector block. Another key feature of the apparatus was to place cartridge heaters inside the collector block to be available during calibration. We also decided to use ice water to increase the accuracy of the thermistors while decreasing the internal temperature of the device.</p>
@@ -202,14 +273,14 @@
 								<p style="text-align:center">Showing the governing heat equation for the final calorimeter iteration. All quantities aside from the radiative heat are either controlled, or they are measured using temperature and flow rate data.</p>
 							</span>
 							
-							<p>The mathematical model shown above allows for factoring out convective and conductive gains in the final heat measurement. This was ultimately done using a multilinear regression technique on the various temperature gradients responsible for those heat gains.</p>
+							<p>The mathematical model shown above allows for factoring out convective and conductive gains in the final heat measurement. This was ultimately done using a multi-linear regression technique on the various temperature gradients responsible for those heat gains.</p>
 							<span class="image main">
 								<img src="images/Mesodyne/Calorimeter/img5.png" alt="" />
 								<p style="text-align:center">A collection of graphs representing the calibration procedure for the calorimeter. The post-processing step transitions from multiple temperature-time series to a single value representing the burner's radiative output.</p>
 							</span>
 
 							<h3>Conclusion</h3>
-							<p>This calorimeter device turned out to be a success as we were able to measure the burner output with a precision of 5 Watts as required. With this project I learned much about thermalfluids from my peers and co-workers, although I had not taken a course on the subject beforehand.</p>
+							<p>This calorimeter device turned out to be a success as we were able to measure the burner output with a precision of 5 Watts as required. With this project gained a profound, practical understanding of thermal heat transfer and fluid mechanics with the help of my co-workers.</p>
 
 						</article>
 
@@ -236,11 +307,11 @@
 							</span>
 							<span class="image main">
 								<img src="images/Mesodyne/Flexure/img3.jpg" alt="" />
-								<p style="text-align:center">A second approach used a mill and some sacrificial aluminium pieces to hold the steel in place. While this produced a more precise component, many drill bits were dulled in the process.</p>
+								<p style="text-align:center">A second approach used a mill and some sacrificial aluminum pieces to hold the steel in place. While this produced a more precise component, many drill bits were dulled in the process.</p>
 							</span> 
 
 							<h3>Result</h3>
-							<p>We discovered a minor issue where the thumb screws could not clamp down with enough force when hand tighetened, but this was fixed by replacing them with socket head screws, and inserting grip washers in between the aluminum components. </p>
+							<p>We discovered a minor issue where the thumb screws could not clamp down with enough force when hand tightened, but this was fixed by replacing them with socket head screws, and inserting grip washers in between the aluminum components. </p>
 							<span class="image main">
 								<img src="images/Mesodyne/Flexure/img6.jpg" alt="" />
 								<p style="text-align:center">The flexure stage attached to the vacuum flange and mounted on an optical table.</p>
@@ -275,7 +346,7 @@
 								<img src="images/Automatic Cat Feeder/feeder_testing-3.jpg" alt="" />
 								<p style="text-align:center"> Testing the prototype</p>
 							</span>
-							<p> The final step was to put the prototype to the test. The house was cold during our departure, so although the stepper motor heated up to around 120 degrees Fahrenehit due to several days of powered use, it didn't burn out in the end.
+							<p> The final step was to put the prototype to the test. The house was cold during our departure, so although the stepper motor heated up to around 120 degrees Fahrenheit due to several days of powered use, it didn't burn out in the end.
 							<h3>Results</h3>
 							<p> When we came back the cat was still alive and happy! (although perhaps a bit chubbier)</p>
 						</article>
@@ -286,7 +357,7 @@
 							<p>I have been working as a Junior Machinist at the Forsyth machine shop on Northeastern's campus since the spring of 2021. Here are a few projects during which I have employed most of my machining knowledge and learned more.</p>
 
 							<h3>Aesthetic Spinning Top</h3>
-							<p> The idea was to make a top which would make a satisfying desk toy but also demonstrate the possibility of joining multiple material types into a solid object. As an increased hardness of the point of contact leads to decreased fricitonal losses, a stainless steel core was used, while a brass exterior provided the aesthetic. Pressfittng the two cylinders together was a process of trial and error. Initially, they were simply pressed together using a bench press with no thermal processing and this resuled in unfavorable cavities to form in between the steel and brass pieces. Later, with the second attempt, the brass piece was heated up with a blowtorch while the steel was cooled with liquid nitrogen. This allowed the former to expand and the latter to contract, resulting in much tighter tolerances at room temperature.</p>
+							<p> The idea was to make a top which would make a satisfying desk toy but also demonstrate the possibility of joining multiple material types into a solid object. As an increased hardness of the point of contact leads to decreased frictional losses, a stainless steel core was used, while a brass exterior provided the aesthetic. Press-fitting the two cylinders together was a process of trial and error. Initially, they were simply pressed together using a bench press with no thermal processing and this resulted in unfavorable cavities to form in between the steel and brass pieces. Later, with the second attempt, the brass piece was heated up with a blowtorch while the steel was cooled with liquid nitrogen. This allowed the former to expand and the latter to contract, resulting in much tighter tolerances at room temperature.</p>
 							<span class="image main">
 								<img src="images/Machining/machining_spinning-top.jpg" alt="" />
 								<p style="text-align:center"> Top in spinning position </p>
@@ -298,7 +369,7 @@
 								<img src="images/Machining/machining_toolholder-sketch.png" alt="" />
 								<p style="text-align:center"> Designing the toolholder by sketching. A requirement is to accomodate 2 different collet sizes.</p>
 							</span>
-							<p>The 1/4 in steel pieces were first waterjet, then press fit, and then welded together. The difficulty was finding the right tolerances for the tab and slot features, but this was solved after two iterations.</p>
+							<p>The 1/4 in steel pieces were first water-jet, then press fit, and then welded together. The difficulty was finding the right tolerances for the tab and slot features, but this was solved after two iterations.</p>
 							<span class="image main">
 								<img src="images/Machining/machining_toolholder-mounted-2.jpg" alt="" />
 								<p style="text-align:center"> Toolholder mounted on a worktable</p>
@@ -313,20 +384,20 @@
 
 							<h3>Project Summary</h3>
 							<ul>
-								<li>I wanted to make a self-balancing inverted pendulum on a cart machine becasue it would be so cool</li>
-								<li>With this project I learned the basics of machining, tolerancing, power budgeting, and electronics</li>
-								<li>Computer simulations and rapid prototyping were used to design a flexured linear slide</li>
+								<li>I wanted to make a self-balancing inverted pendulum on a cart machine because it would be so cool</li>
+								<li>With this project I learned the basics of machining, tolerances, power budgeting, and electronics</li>
+								<li>Computer simulations and rapid prototyping were used to design a flexure-based linear slide</li>
 								<li>Used Simulink and knowledge of classic control theory to design a Raspberry-Pi based PID controller</li>
 							</ul>
 
 							<h3>Motivation</h3>
-							This project first started at an engineering summer camp taught by MIT Professor Alex Slocum where we were instructed to find a problem and apply the FUNDAMENTAL principles of design to the entire process. This project grew into a larger robotics endeavor where I learned PID control alrogithms, electronics, machining, prototyping, felxure design, and acquired many more analytical skills.</p>
+							This project first started at an engineering summer camp taught by MIT Professor Alex Slocum where we were instructed to find a problem and apply the FUNDAMENTAL principles of design to the entire process. This project grew into a larger robotics endeavor where I learned PID control algorithms, electronics, machining, prototyping, flexure design, and acquired many more analytical skills.</p>
 
 							<h3>Description</h3>
-							<p>An inverted pendulum is an inherently unstable system becasue gravity is not a restoring force but an applied force that coerces the pendulum to a stabler equilibrium (where it is hanging like a normal pendulum). To keep the pendulum in equilibrium, a restoring force must be applied. One way to do this is by accelerating the pendulum's refrence frame and making use of Newton's 2nd law, "F=ma". Using only one degree of freedom, the falling mass may be kept in its original position despite external disturbances which may cause perturbations. There are many YouTube <a href="https://www.youtube.com/watch?v=qjhAAQexzLg">videos</a> featuring these types of machines and how they work.</p>
+							<p>An inverted pendulum is an inherently unstable system because gravity is not a restoring force but an applied force that coerces the pendulum to a stabler equilibrium (where it is hanging like a normal pendulum). To keep the pendulum in equilibrium, a restoring force must be applied. One way to do this is by accelerating the pendulum's reference frame and making use of Newton's 2nd law, "F=ma". Using only one degree of freedom, the falling mass may be kept in its original position despite external disturbances which may cause perturbations. There are many YouTube <a href="https://www.youtube.com/watch?v=qjhAAQexzLg">videos</a> featuring these types of machines and how they work.</p>
 
 							<h3>Functional Requirements</h3>
-							<p>To fit on a benchtop, the linear stage needed to lay horizontal, and it required a sliding carriage on which to secure the pendulum mechanism. For coolness points, the pendulum had to carry an object up to 1kg in mass while in balance. This meant that the pendulum assembley had to be rigid enough to withstand the load, and the DC motor powerful enough to accelerate the pendulum to the necessary velocities. This also meant that the linear stage needed to be long enough to allow for large displacements of the pendulum base in case it needed to deccelerate gradually. The mathematical model for the inverted-pendulum system is simple but it is also highly nonlinear, so sensing and feedback loop control is required to keep it at a constant angle.</p>
+							<p>To fit on a bench-top, the linear stage needed to lay horizontal, and it required a sliding carriage on which to secure the pendulum mechanism. For coolness points, the pendulum had to carry an object up to 1kg in mass while in balance. This meant that the pendulum assembly had to be rigid enough to withstand the load, and the DC motor powerful enough to accelerate the pendulum to the necessary velocities. This also meant that the linear stage needed to be long enough to allow for large displacements of the pendulum base in case it needed to decelerate gradually. The mathematical model for the inverted-pendulum system is simple but it is also highly nonlinear, so sensing and feedback loop control is required to keep it at a constant angle.</p>
 
 							<span class="image main">
 								<img src="images/Balancing Pendulum/pendulum_coding_power-requirements.jpg" alt="" />
@@ -334,10 +405,10 @@
 							</span>
 
 							<h3>Limitations</h3>
-							<p>The main limiting factor was my budget. I didn't want to spend more than $300 on the entire assembly so only the most essential precision components were purchased from McMaster-Carr. This included the precision ground steel rods and the teflon bearings which were cheaper than regular ball bearings. With no initial machining/engineering experience, the first attempts lacked the necessary precision tolerances. This lack was compensated for through the use of built-in flexures on the rail carriage. Another limitation was physical space. This was a machine which needed to be portable and take up little space on the benchtop, but also be large enough to handle with normal garage tools. Finally, it needed to be safe enough to poke with a finger (and demonstrate enternal perturbations), so safety measures had to be integrated into the design as well.</p>
+							<p>The main limiting factor was my budget. I didn't want to spend more than $300 on the entire assembly so only the most essential precision components were purchased from McMaster-Carr. This included the precision ground steel rods and the teflon bearings which were cheaper than regular ball bearings. With no initial machining/engineering experience, the first attempts lacked the necessary precision tolerances. This lack was compensated for through the use of built-in flexures on the rail carriage. Another limitation was physical space. This was a machine which needed to be portable and take up little space on the bench-top, but also be large enough to handle with normal garage tools. Finally, it needed to be safe enough to poke with a finger (and demonstrate internal perturbations), so safety measures had to be integrated into the design as well.</p>
 
 							<h3>Brainstorming and Design</h3>
-							<p>The first step was to sketch ideas and think of all the possible ways to satisfy the functional requirements within the limitaitons. The options were narrowed down once a few benchtop models were whipped up using LEGO technic pieces. Afterwards, the next stage was to CAD model everything in SolidWorks and Fusion 360, and further simplify the design while making sure to consult with peers. The final design concept was kept throughout the building stage, only the individual component layout and structure changed dramatically. Consider the evolution from 2018 to 2021 shown in the images below.</p>
+							<p>The first step was to sketch ideas and think of all the possible ways to satisfy the functional requirements within the limitations. The options were narrowed down once a few bench-top models were whipped up using LEGO technic pieces. Afterwards, the next stage was to CAD model everything in SolidWorks and Fusion 360, and further simplify the design while making sure to consult with peers. The final design concept was kept throughout the building stage, only the individual component layout and structure changed dramatically. Consider the evolution from 2018 to 2021 shown in the images below.</p>
 
 							<span class="image main">
 								<img src="images/Balancing Pendulum/pendulum_CAD-old.jpg" alt="" />
@@ -351,42 +422,42 @@
 
 							<h4>Component: Flexured Carriage</h4>
 
-							A large issue during the building and design phase was that the components used are tight toleranced and any displacment causes enormous stresses that bind up the carriage motion. Therefore, mechanical flexures, are used to decrease the spring constant of various motion components and reduce the stresses casued by load-induced strains. I kept an engineering notebook all along to record my progress and figure out formulas.
+							A large issue during the building and design phase was that the components used are tight tolerances and any displacement causes enormous stresses that bind up the carriage motion. Therefore, mechanical flexures, are used to decrease the spring constant of various motion components and reduce the stresses caused by load-induced strains. I kept an engineering notebook all along to record my progress and figure out formulas.
 
 							<span class="image main">
 								<img src="images/Balancing Pendulum/pendulum_enotebook_sample.jpg" alt="" />
-								<p style="text-align:center"> Figuring out the tolerances in the linear carriage, and the optimal flexure design to accomodate them.</p>
+								<p style="text-align:center"> Figuring out the tolerances in the linear carriage, and the optimal flexure design to accommodate them.</p>
 							</span>
 
 							The most important flexures on the machine are ones which hold the linear bearings in place and are attached to the carriage body. The flexures account for misalignment errors of the two rods relative to each other, as well as how the carriage blocks are attached to the carriage chassis.
 
 							<span class="image main">
 								<img src="images/Balancing Pendulum/pendulum_flexure_collage.jpg" alt="" />
-								<p style="text-align:center"> Runnng FEM simulations on various bearing mount flexure designs to determine the smallest and most effective form factor.</p>
+								<p style="text-align:center"> Running FEM simulations on various bearing mount flexure designs to determine the smallest and most effective form factor.</p>
 							</span>
 
-							Initially these were to be waterjetted out of aluminum bar stock, but the more economical choice of 3D printing them won out in the end.
+							Initially these were to be water-jetted out of aluminum bar stock, but the more economical choice of 3D printing them won out in the end.
 							<!-- <span class="image main">
 								<img src="images/Balancing Pendulum/pendulum_flexure_3dprinted.jpg" alt="" />
 								<p style="text-align:center"> 3D printing the flexure mounts to be used on the bearing blocks.</p>
 							</span> -->
 
-							Another important flexure in the carriage assembly is the carriage chassis itself which compensates for the vertical misalignment of the two carriage blocks. Becasue of the limitations of how the bearing flexures are able to bend, this flexured chassis makes up for the lost degree of freedom.
+							Another important flexure in the carriage assembly is the carriage chassis itself which compensates for the vertical misalignment of the two carriage blocks. Because of the limitations of how the bearing flexures are able to bend, this flexure-based chassis makes up for the lost degree of freedom.
 							<span class="image main">
 								<img src="images/Balancing Pendulum/pendulum_flexure_collage2.jpg" alt="" />
-								<p style="text-align:center"> Runnng simulations on the carriage chassis flexure to find the optimal tab width.</p>
+								<p style="text-align:center"> Running simulations on the carriage chassis flexure to find the optimal tab width.</p>
 							</span>
 
-							This piece was cut out of 1/8 inch low-carbon steel on an OMAX waterjet cutter.
+							This piece was cut out of 1/8 inch low-carbon steel on an OMAX water-jet cutter.
 
 							<span class="image main">
 								<img src="images/Balancing Pendulum/pendulum_flexure_waterjetted.jpg" alt="" />
-								<p style="text-align:center"> Instaling the flexured chassis.</p>
+								<p style="text-align:center"> Installing the flexure-based chassis.</p>
 							</span>
 
 							<h4>Component: Belt Tensioner</h4>
 
-							There had been a couple iterations for the belt tensioner which would pull the two ends of the timing belt together and also be secured in a recess of the linear carriage. The first design involved a platw which would pull down a small belt section which interloccked with the two loose ends and pulled them towards the center. This worked fine until the belt section gradually deformed and loosened up, thereby losing its tension.
+							There had been a couple iterations for the belt tensioner which would pull the two ends of the timing belt together and also be secured in a recess of the linear carriage. The first design involved a plate which would pull down a small belt section which interlocked with the two loose ends and pulled them towards the center. This worked fine until the belt section gradually deformed and loosened up, thereby losing its tension.
 
 							<span class="image main">
 								<img src="images/Balancing Pendulum/pendulum_tensioner_model1.jpg" alt="" />
