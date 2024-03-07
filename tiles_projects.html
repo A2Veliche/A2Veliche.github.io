@@ -1,22 +1,12 @@
 <!DOCTYPE HTML>
-<!--
-	TO DO LIST:
-	- link tiles in Artowork + Research to pop-up articles
-	- change contact form to contact information
-	- add text + welcome message
-	- add Resume/CV to Introduction
-	- add research projects + descriptions
-	- change font
-	- change colouring
-	- add photography
-	- add background image
--->
+
 <html>
 	<head>
 		<title>Andrei Veliche: Projects</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 	</head>
 	<body class="is-preload">
@@ -29,258 +19,346 @@
 
 						<!-- Fulfil Physics -->
 						<article id="fulfil_physics">
-							<h2 class="major">Physics simulations of drop dispensing</h2>
+							<h2 class="major">Targeting Algorithm for Bag Dispenses</h2>
 
-							<h3>Project Summary</h3>
-							<p>Fulfil is an automation company that makes robotic fulfillment centers. A core part of the company's technology is having store keeping units (SKU) dispense off of tray conveyors into line-following bags, circumventing the need for expensive robotic pick-and-place units. The throughput of the store depends on a host of factors, one of which is how precisely the robotic tray can dispense a SKU item into the bag. The point of this project was to help the factory control algorithm predict <b>how the item will fall into the bag</b> given the following variables</p>
-							<ul>
-								<li>Nominal vertical drop distance into the bag</li>
-								<li>Item dimensions, weight distribution, and shape</li>
-								<li>Conveyor speed upon dispense</li>
-								<li>Friction coefficient between item surface and conveyor belt</li>
-							</ul>
-							Furthermore, the way the SKU will settle into the bag depended on what was in the bag already and in what position it would make contact with those items. Overall, this project became an essential collaboration between multiple software teams, as it involved databases, computer vision, firmware, and actuation. At the heart of it all was empirical data collected through countless hours of manual testing, and Lagrangian mechanics to unify those results into a successful theory.
-							
-							<p></p>
-							<h3>Empirical Testing</h3>
-							<p>I spent the first month of this project working with the actual hardware and observing how different item shapes and sizes would impact their dispense mechanics. When an item falls off a conveyor, its motion is a combination of translation along a parabolic trajectory, and rotation around its center of gravity along the dispense plane. Leading up to the moment that the item begins its free-fall is a phase where energy is exchanged between the item and the conveyor by means of frictional and normal forces.</p>
+							<h3>Project Goals</h3>
+							<ol>
+								<li>Predict how a stock item would fall into a bag given its physical properties and dispense speed.</li>
+								<li>Find ways to avoid item collisions with each other or with bag walls.</li>
+								<li>Implement an efficient instance of the algorithm to be run in less than 10ms.</li>
+							</ol>
 
-							<span class="image main"  width="80%">
-								<img src="images/Fulfil/Physics/falling_montage.png" alt=""/>
-								<p style="text-align:center">Pasta box starts translating at a constant horizontal velocity (left pane), after rotating breaks off from the conveyor edge (center pane), after free-fall lands on a third corner (right pane) ultimately settling on its top face.</p>
-							</span>
+							<div class="grid-container">
+								<div class="grid-left">
+									<h3> Empirical Data Collection </h3>
+									<p>A dozen items were dispensed at different speeds and heights and the landing distance was recorded each time. This was done into a granular media to absorb the impact energy.</p>
+									<p>Each item was weighed then placed on a custom torsional pendulum to determine its specific moment of inertia.</p>
+									<p></p>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Fulfil/Physics/falling_montage.png"/>
+										<p class="img_overlay">Tracking the motion of a pasta box as it falls into a granular media.</p>
+									</div>
+								</div>
+								<div class="grid-img grid-left" style="align-self: end;">
+									<div class="img_wrap"  width="80%">
+										<img class="img_img" src="images/Fulfil/Physics/pendulum.jpg" alt=""/>
+										<p class="img_overlay" style="text-align:center">Using a 3D printed torsional pendulum to measure moments of inertia of items.</p>
+									</div>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap"  width="80%">
+										<img class="img_img" src="images/Fulfil/Physics/falling_montage_2.png" alt=""/>
+										<p class="img_overlay" style="text-align:center">A red bull can dispensed at a lower speed shows more pronounced slipping.</p>
+									</div>
+								</div>
+							</div>
 
-							The same tests were carried out for several more items including red bull cans, bottled water, cereal boxes, and tuna cans. Each trial was repeated 5 times for 4 different bag heights between 400mm and 60mm and 3 different dispense speeds (100mm/s, 200mm/s, 300mm/s). The dependent variables kept track of were the horizontal displacement of the item's center of mass, the impact location, and which face it settled on.
+							<div class="grid-container">
+								<div class="grid-text grid-right">
+									<h3> Developing a Physics Model </h3>
+									<p>Every dispense problem was abstracted to a rectangle rolling off the edge of a spinning disk, with the exception of spherical items. </p>
+									<p>Composed of both a static and kinetic friction regime, the model accounted for stick-slip interaction between the item and the conveyor.</p>
+									<p>Dynamic equations were derived through the use of Lagrangian mechanics.</p>
+								</div>
+								<div class="grid-img grid-left">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Fulfil/Physics/free_body_diagram.png"/>
+										<p class="img_overlay">An FBD of a prismatic object being dispensed at a constant speed.</p>
+									</div>
+								</div>
+								<div class="grid-img grid-rigth">
+									<div class="img_wrap"  width="80%">
+										<img class="img_img" src="images/Fulfil/Physics/equations.png" alt=""/>
+										<p class="img_overlay" style="text-align:center">Static friction and kinetic friction regime dynamics.</p>
+									</div>
+								</div>
+							</div>
 
-							<span class="image main"  width="80%">
-								<img src="images/Fulfil/Physics/falling_montage_2.png" alt=""/>
-								<p style="text-align:center">A marked red bull can being dispensed at a lower speed. Compared to the pasta box, it rotates less and translates along its length more as it breaks off from the conveyor.</p>
-							</span>
-
-							All drop tests were conducted into a pan of granular media (such as lentils) to instantly deaden the kinetic energy of the falling item through absorbtion and momentum transfer. The craters left in the media were also essential in determining the item's impact location.
-							
-							<p></p>
-							<h3>Lagrangian Mechanics</h3>
-
-							The physical interaction between the item and the conveyor belt changes over time due to breaking of static friction and the transition into a dynamic friction regime. The first and second mechanisms of motion were named the "no-slip" phase and the "slip" phase, and each had its associated differential equations and boundary conditions.
-
-							<span class="image main"  width="80%">
-								<img src="images/Fulfil/Physics/free_body_diagram.png" alt=""/>
-								<p style="text-align:center">A free body diagram of a prismatic object being dispensed starting at the circular edge of the conveyor. The conveyor is rotating clockwise with a constant surface speed.</p>
-							</span>
-
-							<span class="image main"  width="80%">
-								<img src="images/Fulfil/Physics/equations.png" alt=""/>
-								<p style="text-align:center">Pair of equations contrasting the dynamics of the two dispense phases. The static friction regime requires the bottom left inequality be satisfied, while the kinetic friction regime requires a positive normal force.</p>
-							</span>
-
-							By implementing a Runge-Kutta numerical solver in Python, I was able to find solutions to these equations after substituting in item properties and measurable friction coefficients.
-
-							<p></p>
-							<h3>Model Verification</h3>
-
-							<span class="image main"  width="80%">
-								<img src="images/Fulfil/Physics/energy_diagrams.png" alt=""/>
-								<p style="text-align:center">Running the simulation in Python and plotting the system energy and forces allowed for quick debugging.</p>
-							</span>
-
-							<span class="image main"  width="80%">
-								<img src="images/Fulfil/Physics/model_verification_chex.png" alt=""/>
-								<p style="text-align:center">Verifying the Python physics model against empirical data (error bars). Green bands show uncertainty in the model given 10% noise in the problem's stating parameters. The match is nearly perfect.</p>
-							</span>
-
-							<span class="image main"  width="80%">
-								<img src="images/Fulfil/Physics/model_continuity.png" alt=""/>
-								<p style="text-align:center">Checking model continuity and stability using contour diagrams. For each value of speed and static friction coefficient, the model returns a different final motion parameter (angular speed, overhang length, etc). Notice the bifurcation happening at low friction values.</p>
-							</span>
-
-							<p></p>
-							<h3>Implementation</h3>
-
-							Given the analyses shown above and the multiple comparisons to empirical data, the model was trustworthy enough to provide a high-fidelity prediction of what position an item would end up in once it fell into a bag. With this information, the computer vision team could find a suitable item target and attempt to dispense it in that location with a higher confidence than before. To implement the algorithm in the factory control codebase I needed to convert all the Python code into C#. Because of the lack of support on the scientific computing front, I ended up having to write my own Runge-Kutta numerical solver that could use event function and run on multi-dimensional vector functions. I also needed to simplify my code by a lot in order to optimize it for production. 
-
+							<div class="grid-container">
+								<div class="grid-left">
+									<h3> Model Verification with Simulations </h3>
+									<p>The physics model above was verified in 4 different ways:</p>
+									<ul>
+										<li>SolidWorks Motion Studio</li>
+										<li>Python numerical integration using Scipy</li>
+										<li>MuJoCo toolbox and URDF descriptions</li>
+										<li>Direct comparison against empirical data</li>
+									</ul>
+									<p>Chaotic behavior was detected through the use of bifurcation diagrams and varying theoretical friction coefficient values.</p>
+									<p>There was strong agreement between the model and data, but liquid containers showed the most deviation from theory.</p>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap"  width="80%">
+										<img class="img_img" src="images/Fulfil/Physics/mujoco_scene.png" alt=""/>
+										<p class="img_overlay" style="text-align:center">Using MuJoCo to test virtual dispenses and compare to analytical solutions.</p>
+									</div>
+								</div>
+								<div class="grid-img grid-left"  style="align-self: end">
+									<div class="img_wrap"  width="80%">
+										<img class="img_img" src="images/Fulfil/Physics/model_verification_chex.png" alt=""/>
+										<p class="img_overlay" style="text-align:center">Verifying a Python probabilistic physics model against empirical data.</p>
+									</div>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap"  width="80%">
+										<img class="img_img" src="images/Fulfil/Physics/model_continuity.png" alt=""/>
+										<p class="img_overlay" style="text-align:center">Checking model continuity, also notice the bifurcation at low friction values.</p>
+									</div>
+								</div>
+							</div>
 
 						</article>
 
 						
 
-						<!-- Fulfil Hot Knife -->
+						<!-- Fulfil Bead -->
 						<article id="fulfil_bead">
-							<h2 class="major">Joining Bead Iterative Design</h2>
+							<h2 class="major">Timing Belt Joining Bead</h2>
 
-							<h3>Problem Statement</h3>
-							<p>An engineering challenge at Fulfil was to increase the tensile load capacity of a round belt bead-chain assembly by re-designing a crimp that would secure the two loose ends together. This would allow the belt to have higher cycle times thereby increasing its component lifecycle. Previous attempts to join the two ends of round belting together would meet with failure within 2 months of operation, thereby voiding a $500 assembly and precious amounts of manual work. Space was at a premium in this assembly, as any solution would need to fit within the contours of a standard 12mm diameter bead to ensure proper tolerances with the bead chain pulleys. Off-the-shelf solutions such as crimps or adhesives were found to be insufficient for our purposes, so a rapid prototyping approach was pursued.</p>
+							<h3>Project Goals</h3>
 
-							<h3>Assessment</h3>
+							<ol>
+								<li>Design a compact joining bead for use with rubber-coated nylon rope, for both ambient and freezing temperatures.</li>
+								<li>Increase joining bead tensile strength from 15kg to 30kg to improve component lifetime.</li>
+								<li>Reduce manufacturing and assembly costs through an in-house additive manufacturing approach.</li>
+							</ol>
 
-							The initial joining bead looked just like the normal ones (black injection-molded plastic) shown in the figure below, only with two set screws on the top to fix the ends of the belting together.
-							<span class="image main"  width="80%">
-								<img src="images/Fulfil/JoiningBead/cracked2.jpg" alt=""/>
-								<p style="text-align:center">The bead chain tended to crack in some places due to temperature-induced stresses, as well as break apart at the joining bead due to improper bonding.</p>
-							</span>
+							<div class="grid-container">
+								<div class="grid-text grid-left">
+									<h3>Assessment</h3>
+									<p> Reasons for component failure: </p>
+									<ul>
+										<li>Set screws used to hold the ends together inside the joining bead would instigate fractures under high tensile loads.</li>
+										<li>The inner nylon cord would slip inside the polyurethane sheath.</li>
+										<li>Adhesion surface area was too small due to space constraints.</li>
+									</ul>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Fulfil/JoiningBead/cracked2.jpg"/>
+										<p class="img_overlay">Cracking due to temperature-induced stresses and cyclic fatigue.</p>
+									</div>
+								</div>
+							</div>
 
-							Reasons for failure:
-							<ul>
-								<li>Tensile loads above 15lbs would cause outer sheath to crack at the contact point with set screws. Loosening or tightening set screws would decrease load capacity.</li>
-								<li>At similar forces, the loose inner sheath (nylon) would slip inside the outer sheath (polyurethane) reducing the belt's overall capacity.</li>
-								<li>The small radius of the bead combined with the joining geometry only allowed for a maximum contact length of 5mm. This presented an undersized superglue bonding surface. </li>
-							</ul>
+							<div class="grid-container">
+								<div class="grid-img grid-left">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Fulfil/JoiningBead/initial_design.jpg"/>
+										<p class="img_overlay">Using set screws as crimps - 100N capacity.</p>
+									</div>
+								</div>
+								<div class="grid-right">
+									<h3>Iterative Design</h3>
+									<!-- <p>Prototypes were manufactured using the Bambu X1 Carbon, in PLA, ABS, and PC.</p> -->
+									<p>Concept # 1: Using set screws to fasten against the belt ends, but this failed due to adhesion limits.</p>
+									<p>Concept # 2: Using internal capstan friction by way of wrapping the cord ends inside the bead, but this too failed due to layer separation.</p>
+									<p>Concept # 3: Relying on bolt compression against the internal bead walls to compensate for the cord's elastic deformation under tension.</p>
+								</div>
+								<div class="grid-img grid-left">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Fulfil/JoiningBead/intermediate_design.jpg"/>
+										<p class="img_overlay">Using capstan friction - 150N capacity.</p>
+									</div>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Fulfil/JoiningBead/final_design.png"/>
+										<p class="img_overlay">Using bolt compression and hoop stress - 220N capacity.</p>
+									</div>
+								</div>
 
-							
-							<h3>Iterations</h3>
+							</div>
 
-							<h4>Concept # 1 - Set Screws</h4>
-							The first attempt at fixing these inadequacies was to improve the internal geometry of the bead to work with set screws as before. The Bambu X1 Carbon 3D printer was used to print all these prototypes out of PLA. It was found that using set screws caused damage to the polyurethane sheath, limiting the tensile strength to the toughness of the material in itself. No changes to internal cable routing would improve the bead's performance. Furthermore, tightening the set screw would apply stresses to the 3d printed bead causing it to crack open and fail.
-
-							<span class="image main"  width="80%">
-								<img src="images/Fulfil/JoiningBead/initial_design.jpg" alt=""/>
-								<p style="text-align:center">The initial design consisted of two halves that would join together and secure onto their respective cable ends using set screw pressure.</p>
-							</span>
-
-							<h4>Concept # 2 - Capstan Friction</h4>
-							My second attempt used the concept of capstan friction to secure the belt ends together. I wanted to maximize the wrap-around angle inside the bead as it would exponentially increase the friction force. While this approach worked better than before, now withstanding comparable loads to the original beads, it would still fail by the internal layer separating from the outer one. Any attempt to melt or glue the free ends would lead to the same failure mode.
-
-							<span class="image main"  width="80%">
-								<img src="images/Fulfil/JoiningBead/intermediate_design.jpg" alt=""/>
-								<p style="text-align:center">The capstan joining beads used wrap-around friction and cable tension to pull everything together.</p>
-							</span>
-
-							<h4>Concept # 3 - Bolt compression</h4>
-							By now it was clear that any solution would need to address the layer separation issue present in the last iteration. Instead of relying on external friction forces, I changed gears to focusing on clamping the layers together. As a result, a completely new concept was born that was driven by bolt tension. Tightening the flat-headed screw shown in the figure below would apply compression the belting, squashing it in place and preloading it such that tensile loads would not loosen its fit.
-
-							<span class="image main"  width="80%">
-								<img src="images/Fulfil/JoiningBead/final_design.png" alt=""/>
-								<p style="text-align:center">The final design used a flat-headed screw on one side and a hex nut on the other to compress the belting into the bead walls for maximum tightness. This time the bead was made of one piece.</p>
-							</span>
-
+							<p></p>
 							<h3>Conclusion</h3>
-
-							The final design worked for any size belt and, when printed out of polycarbonate, could withstand tension forces up to 250N, about twice as much as before. The belts no longer snapped at their joining bead connection for the remaining duration of 4 months while I was still at the company.
+							The bead lifetime exceeded 4 months of continuous operation in freezing temperatures, marking a ~300% improvement.
 
 						</article>
 
-						<!-- Fulfil Torsional Pendulum -->
-						<article id="fulfil_pendulum">
-							<h2 class="major">Torsional Pendulum</h2>
+						<!-- Fulfil Hot Knife -->
+						<article id="fulfil_hotknife">
+							<h2 class="major">Hot Knife Apparatus</h2>
 							<h3>Project Summary</h3>
+							<p>There was a need to add chamfers to 3000 injection molded tongue pins without ordering an additional mold, and a hot knife jig was discovered to be the most efficient tool for the job.</p>
+
+							<div class="grid-container">
+								
+								<div class="grid-left">
+									<h3>Apparatus Description</h3>
+									<p>Precision: the plastic part is located underneath the blade with metal dowel pins.</p>
+									<p>Ergonomics: a lever allows the operator to adjust blade temperature and cutting speeds in a single stroke.</p>
+									<p>Efficiency: a metal brush makes the knife self-cleaning and ready for the next cut.</p>
+									<p>Safety: a blade guard keeps fingers out and a blower fan diverts toxic gasses away from eyes.</p>
+									
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Fulfil/HotKnife/img_isoview.png"/>
+										<p class="img_overlay">The benchtop-mounted hot knife jig is equipped with a fan to divert toxic fumes.</p>
+									</div>
+								</div>	
+								<div class="grid-img grid-left">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Fulfil/HotKnife/img_tile_2.png"/>
+										<p class="img_overlay">Lowering the handle triggers the hot knife and heats up the blade as it sinks into the platic part. </p>
+									</div>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Fulfil/HotKnife/img_topview_2.png"/>
+										<p class="img_overlay">Raising the handle causes the blade to clean itself of plastic residue against the metal brush.</p>
+									</div>
+								</div>
+
+							</div>
 						</article>
 
 						<!-- Mesodyne Control PCB -->
 						<article id="mesodyne_PCB">
 							<h2 class="major">Air Intake Control PCB</h2>
-							<p>Disclaimer: many aspects of this project not disclosed here are confidential and proprietary to Mesodyne.</p>
+							<p style="color: red">The disclosure of the following information has been curated and approved by Mesodyne Inc.</p>
 
-							<h3>Project Summary</h3>
-							<ul>
-								<li>This project was developing a space/weight efficient blower device to fuel combustion</li>
-								<li>Lengthy experimentation with various blower fans, motor drivers, and flow sensors</li>
-								<li>Incrementally developed skills to design a STM32-based PCB control board</li>
-								<li>Remaining time was spent trying to tune a PID loop to prevent post-ignition thermo-acoustic resonance</li>
-							</ul>
+							<h3>Problem Statement</h3>
+							<p>To develop a miniature blower module that sustains propane combustion within a LightCell power generation unit.</p>
 
-							<h3>Problem</h3>
-							<p>As Mesodyne's Lightcell device matured from bench-top testing towards a final product, the propane burner's air supply needed to transition from the lab's air compressor to a more compact solution. The ultimate requirement for such a submodule would be power efficiency, as the Lightcell would eventually become a standalone power generation unit. To address this issue, a high-pressure blower fan was needed, as well as a feedback signal and a controller to guarantee the correct mass flow rate was being delivered. </p>
-						
-							<h3>Methodology</h3>
-							<p>I began by experimenting with various off-the-shelf blower fans, mass flow sensors, and micro-controllers. The design philosophy was "fail fast, fail often" as I was climbing a steep learning curve into the circuit design world. While developing my first PCBs that would meet the minimum design requirements, I learned 4 incredibly important lessons:
-							<ul>
-								<li>Before soldering a new circuit or using a new component, always test it on a breadboard.</li>
-								<li>Do not forget to check continuity or shorts before applying power.</li>
-								<li>Avoid crowding components together unnecessarily.</li>
-								<li>Actually read the datasheet.</li>
-							</ul>
-							Essentially, I realized the importance of testing each assumption before jumping to conclusions. I learned this the hard way - by frying two Arduino Nano's, two Adafruit Bluefruit nRF52's, one Arduino Mega, two motor driver chips, and the USB adapter on my Lenovo laptop!</p>
+							<div class="grid-container">
+								<div class="grid-left">
+									<h3>Iterations and Prototyping</h3>
+									<p>Three different controllers were used in the prototyping stage: Arduino Due, Adafruit nRF52, and the Arduino Nano.</p>
+									<p>A Sensirion flow meter provided feedback for PID flow rate control.</p>
+									<p>Each iteration slowly reduced overall power requirements from 48W to 7W through improved blower selection and more efficient air flow paths.</p>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/PCB/img8.jpg"/>
+										<p class="img_overlay">First Arduino Nano-based PCB with integrated motor drivers and ADCs.</p>
+									</div>
+								</div>
+								<div class="grid-img grid-left"  style="align-self: end">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/PCB/img3.jpg"/>
+										<p class="img_overlay">Combining the blower fan, motor driver, control circuit, and digital flow sensor.</p>
+									</div>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/PCB/img1.jpg"/>
+										<p class="img_overlay">Testing component compatibility with an Arduino Mega shield.</p>
+									</div>
+								</div>	
+								
+							</div>
 
-							<h3> Iterations and Prototyping </h3>
-							The first iteration of the controller was based on an Arduino Due prototype PCB with a Sensirion flow meter as the feedback device. Both speed control and flow rate control were implemented in a cascading PID loop. This setup was problematic because the flow meter measurement would be affected by turbulent air exiting the blower, and the minimum fan speed was still too powerful for our needs.
-							<span class="image main">
-								<img src="images/Mesodyne/PCB/img1.jpg" alt="" />
-								<p style="text-align:center">Connecting all the essential components for the first time and testing their compatibility.</p>
-							</span>
-							The second iteration included a laminar flow pipe between the blower and the flow meter, air bleed ports in front of the blower to cut down on flow rate, and a different controller - an Adafruit Bluefruit nRF52. The more powerful controller allowed for much smoother operation of the blower, and this device worked spectacularly well. However the entire device required 48W to run, and this would gobble up our power budget.
-							<!-- <p></p> -->
-							<span class="image main">
-								<img src="images/Mesodyne/PCB/img3.jpg" alt="" />
-								<p style="text-align:center">Components going from left to right are the blower fan, motor driver, control circuit (with a missing MCU), and digital flow sensor.</p>
-							</span>
-							For the next version, I reverted back to the Arduino Nano for its greater availability, used a less powerful blower fan from Micronel, and a simpler full-bridge motor driver instead of the power-hungry BLDC motor driver board. These assembled into the PCB shown below. This board would be equipped with a 12-bit ADC module and would be back-compatible with the previous blower. However these features were never used because of some missing traces and incorrect wiring of the I2C signal lines.
-							<span class="image main">
-								<img src="images/Mesodyne/PCB/img8.jpg" alt="" />
-								<p style="text-align:center">Notice how beautiful the board looks? Most of it is unusable due to bad I2C signal line tracing.</p>
-							</span>
-							By this point, most of the components were working out for us, but we needed to look further ahead in the future. We decided to design the next prototype around the STM32F07 family of MCUs because of their availability and accessibility. The board began accumulating additional features such as thermocouple chips, analog inputs from thermistors, flash memory, multiple communication lines, analog pressure sensors, and power MOSFETs. After weeks of work and revisions in KiCAD, we came up with a solution that would be functionally equivalent to PCB v1, only supersede it in processing power and number of peripherals.
-							<span class="image main">
-								<img src="images/Mesodyne/PCB/img10.jpg" alt="" />
-								<p style="text-align:center">Control board v2 is the green board on the left. The banana is for scale. Nucleo-64 dev board (white) is for programming the STM32 through ST-LINK protocol.</p>
-							</span> 	
+							<div class="grid-container">
+								<div class="grid-img grid-left">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/PCB/img10.jpg"/>
+										<p class="img_overlay">Control board version 2 uses an embedded STM32 chip. The banana is for scale.</p>
+									</div>
+								</div>
+								<div class="grid-text grid-right">
+									<h3>Final PCB and Testing</h3>
+									<p>The final PCB was built around the STM32F07 family of MCUs due to their accessibility. Onboard are the following components.</p>
+									<ul>
+										<li>Thermocouple amplifiers for temperature sensing.</li>
+										<li>Analog-to-digital converters for thermistors.</li>
+										<li>32MB of flash memory for data collection.</li>
+										<li>Power MOSFETS for turning on 12V systems.</li>
+										<li>Motor driver for the blower.</li>
+										<li>I2C, SCL, and ST-LINK communication lines.</li>
+									</ul>
 
-							<h3>Benchtop Performance</h3>
-							<p>Designing the electronics was a time-consuming task, but even more effort was required during the tuning process for the blower. The device would work perfectly during the middle of the run when the burner had already heated up to its equilibrium temperature, but chaos broke out during the burner's cold ignition and startup. Following ignition, as the flame developed in size and stability the blower needed to supply a constant air stream, but instead the motor developed thermo-acoustic vibrations due to its lack of sufficient back-pressure. As a result, combustion would oscillate violently, and no PID tuning would be able to fully dampen them. </p>
-							<span class="image main">
-								<img src="images/Mesodyne/PCB/img11.jpg" alt="" />
-								<p style="text-align:center">Shown above is the measured vs. set-point flow rate within the first few minutes following ignition. Notice how the initial chaotic behavior slowly transitions into a steady convergence as the burner heats up.</p>
-							</span>
-							
-							<h3>Conclusion</h3>
-							<p>While the system as configured is controllable, a PID loop coupled to an unknown system (the ignited burner) cannot be tuned to optimality in seclusion. One easy solution is to weaken the coupling between the blower and burner by means of a dampening component or greater physical separation. The best path forward, in my opinion, is to gain a better understanding of the thermo-acoustic system through literature review and then implement a Hardware-in-the-Loop (HIL) simulation in Simulink to develop the best controller for the device.</p>
-							<!-- <span class="image main">
-								<img src="images/Mesodyne/PCB/img5.jpg" alt="" />
-								<p style="text-align:center"></p>
-							</span> -->
+									<p>A major challenge was to subdue turbulent fluctuations in airflow right after ignition, casued by rapid thermal heating and acoustic resonance. A combination of PID tuning and acoustic dampening was used to achieve stability.</p>
+								</div>
+								<div class="grid-img grid-left" style="align-self: end">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/PCB/img11.jpg"/>
+										<p class="img_overlay">Turbulent flow rates transition into a steady stream following ignition.</p>
+									</div>
+								</div>	
+							</div>
+
 						</article>
 
 						<!-- Mesodyne Calorimeter -->
 						<article id="mesodyne_calorimeter">
 							<h2 class="major">Thermal Emissions Calorimeter</h2>
-							<p>Disclaimer: many aspects of this project not disclosed here are confidential and proprietary to Mesodyne.</p>
+							<p style="color: red">The disclosure of the following information has been curated and approved by Mesodyne Inc.</p>
 
-							<h3>Project Summary</h3>
+							<h3>Project Goals</h3>
 							<ul>
-								<li>Our benchtop burner needed a device to measure radiative heat losses</li>
-								<li>This calorimeter senses radiative heat through thermal gradients across a cooling channel</li>
-								<li>Extensive modeling work was done to understand extraneous heat losses/gains for the system</li>
-								<li>Data post-processing and calibration required special attention</li>
+								<li>Our benchtop burner needed a device to measure radiative heat with an accuracy of 5W.</li>
+								<li>A calorimeter with a high-absorptivity coating was proposed to transfer all blackbody radiation into the thermal fluid.</li>
 							</ul>
 
-							<h3>Problem</h3>
-							<p>The goal of designing a calorimeter was to measure the total power emitted from a burner in the form of thermal radiation. The surface of the calorimeter would be coated with black paint to absorb nearly all frequencies of light and reflect none back. Unlike a spectrometer, this calorimeter would integrate thermal emissions across its entire collector area, and through accurate measurements of the inflow and outflow water temperatures, the power would be reported as one scalar value. The challenge was to accomplish accurate calorimetry up to 5 Watts, while also accounting for any thermal gains or losses to the environment.</p>
-						
-							<h3>Methodology</h3>
-							<p>A pivotal decision to the calorimeter design was to use a cooling jacket to control the boundary conditions around the collector block. Another key feature of the apparatus was to place cartridge heaters inside the collector block to be available during calibration. We also decided to use ice water to increase the accuracy of the thermistors while decreasing the internal temperature of the device.</p>
+							<div class="grid-container">
+								<div class="grid-left">
+									<h3>Design Methodology</h3>
+									<ul>
+										<li>Ice water is used as the thermal fluid to maintain a low operating temperatures.</li>
+										<li>A cooling jacket insulates the calorimeter from convective losses to the atmosphere and provides a predictable boundary condition.</li>
+										<li>High-precision thermistors are used to measure temperatures witin 0.01 degrees Celsius.</li>
+									</ul>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/Calorimeter/img1.png"/>
+										<p class="img_overlay">Showing a cross-section and assembly view of the calorimeter.</p>
+									</div>
+								</div>
+							</div>
 
-							<h3> CAD Modeling</h3>
-							The calorimeter cooling jacket was designed to insulate the thermal fluid (cold water) away from atmospheric radiation. There was also the fluid circuit that needed to be built in order to supply a steady stream of cold water through the collector block. A variety of fabrication techniques were used here which includes SLA 3D printing, 5-axis CNC machining, and manual mill/lathe work.
-							<span class="image main">
-								<img src="images/Mesodyne/Calorimeter/img1.png" alt="" />
-								<p style="text-align:center">Showing a cross-section and assembly view of the calorimeter. CAD work was done in OnShape.</p>
-							</span> 
+							<div class="grid-container">
+								<div class="grid-img grid-left">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/Calorimeter/img_tile.jpg"/>
+										<p class="img_overlay">Showing internal fluid channels underneath the radiation collector.</p>
+									</div>
+								</div>
+								<div class="grid-right">
+									<h3>Construction</h3>
+									<p>The fluid system use a single centrifugal pump to provide variable flow rates for both the cooling jacket and collector.</p>
+									<p>Cooling channels in the collector block were 5-axis machined out of aluminium.</p>
+									<p>An SLS 3D printed cooling jacket enshrouded 5 out of 6 sides of the collector for maximum insulation.</p>
+									<p>Quick hose disconnects and bubble vents allowed for rapid apparatus setup.</p>
+								</div>
+								<div class="grid-img grid-left">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/Calorimeter/img6.png"/>
+										<p class="img_overlay">Fluid diagram representing the layout of valves, pumps, gauges, and reservoirs.</p>
+									</div>
+								</div>
+								<div class="grid-img grid-right" style="align-self: end;">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/Calorimeter/img8.png"/>
+										<p class="img_overlay">The water pump cart on the left, the calorimeter apparatus on the right.</p>
+									</div>
+								</div>
+							</div>
 
-							<span class="image main">
-								<img src="images/Mesodyne/Calorimeter/img6.png" alt="" />
-								<p style="text-align:center">Fluid diagram representing the layout of valves, pumps, gauges, and reservoirs.</p>
-							</span>
-
-							<h3>Construction</h3>
-							<span class="image main">
-								<img src="images/Mesodyne/Calorimeter/img8.png" alt="" />
-								<p style="text-align:center">The water pump cart on the left, the calorimeter apparatus on the right.</p>
-							</span>
-
-							<h3>Modeling and Data Analysis</h3>
-							<p>In parallel with the physical apparatus that was being tested and built, an accurate model needed to be developed to appropriately interpret sensor data. The image below shows a simplified model together with the symbolic placement of temperature probes.</p>
-							<span class="image main">
-								<img src="images/Mesodyne/Calorimeter/img2.png" alt="" />
-								<p style="text-align:center">Showing the governing heat equation for the final calorimeter iteration. All quantities aside from the radiative heat are either controlled, or they are measured using temperature and flow rate data.</p>
-							</span>
-							
-							<p>The mathematical model shown above allows for factoring out convective and conductive gains in the final heat measurement. This was ultimately done using a multi-linear regression technique on the various temperature gradients responsible for those heat gains.</p>
-							<span class="image main">
-								<img src="images/Mesodyne/Calorimeter/img5.png" alt="" />
-								<p style="text-align:center">A collection of graphs representing the calibration procedure for the calorimeter. The post-processing step transitions from multiple temperature-time series to a single value representing the burner's radiative output.</p>
-							</span>
-
-							<h3>Conclusion</h3>
-							<p>This calorimeter device turned out to be a success as we were able to measure the burner output with a precision of 5 Watts as required. With this project gained a profound, practical understanding of thermal heat transfer and fluid mechanics with the help of my co-workers.</p>
+							<div class="grid-container">
+								<div class="grid-left grid-text">
+									<h3>Data Analysis</h3>
+									<p></p>
+									<p>Multi-linear regression was used to separate out conductive and convective heat gains in order to find the final radiative heat value.</p>
+									<p>Model accounts for a total of 6 temperature measurements, 1 heat control, and 2 flow rate controls.</p>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/Calorimeter/img2.png"/>
+										<p class="img_overlay">Developing the governing heat equation.</p>
+									</div>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/Calorimeter/img5.png"/>
+										<p class="img_overlay">Visual representation of the calorimeter calibration procedure.</p>
+									</div>
+								</div>
+							</div>
 
 						</article>
 
@@ -289,43 +367,66 @@
 						<article id="mesodyne_flexure">
 							<h2 class="major">Flexure Stage for Optical Posts</h2>
 
-							<h3>Problem Statement</h3>
-							<p>I needed to alleviate one translational degree of freedom on a vacuum flange, but simultaneously constrain the other 2 translational and 3 rotational ones. The total weight supported by the flexure stage would amount to 10 kg, while the direction of compliance would be perpendicular to that loading. Additionally, this would be an adjustable extension, allowing for an arbitrary but rigid positioning of the flange in 3d space.</p>
+							<h3>Design Requirements</h3>
+							<ul>
+								<li>To alleviate one translational degree of freedom on a vacuum flange, but simultaneously constrain the other 5.</li>
+								<li>Withstand a vertical load of 100 N.</li>
+								<li>Compatible with optical breadboards and easy to install/adjust.</li>
+							</ul>
 						
-							<h3>Design Considerations</h3>
-							<p>Applying the leaf flexure formula, I was able to calculate the total elasticity of the flexure as a function of length, width, and thickness. The length was chosen to be a standard width for off-the-shelf spring steel rolls, and the thickness was chosen such that the weight loading would not cause buckling in the material. The optimal solution was found by parameter searching over these discrete variables in a spreadsheet, and checking against our machinist's practical intuition.</p>
-							<span class="image main">
-								<img src="images/Mesodyne/Flexure/img1.png" alt="" />
-								<p style="text-align:center">Showing the translational degree of compliance. Thumb screws help tighten the components together to constrain the pitch angle and z-height.</p>
-							</span> 
+							<div class="grid-container">
+								<div class="grid-left grid-text">
+									<h3>Design Approach</h3>
+									<p>Applying the leaf flexure formula to calculate the total elasticity of the flexure as a function of length, width, and thickness. </p>
+									<p>The optimal dimensions were found by parameter searching over these discrete variables and checking with the machinists.</p>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/Flexure/img1.png"/>
+										<p class="img_overlay">Showing the translational degree of compliance. </p>
+									</div>
+								</div>
+							</div>
 
-							<h3> Machining</h3>
-							<p>The aluminium connectors were machined using the advanced cut-to-size-then-drill-some-holes fabrication technique. The leaf flexures on the other hand were the most labor intensive to machine. Spring steel is way less forgiving than aluminum when it comes to drilling holes.</p>
-							<span class="image main">
-								<img src="images/Mesodyne/Flexure/img4.jpg" alt="" />
-								<p style="text-align:center">This first approach of using a plastic jig held in a bench vise to drill through individual springs -- failed spectacularly.</p>
-							</span>
-							<span class="image main">
-								<img src="images/Mesodyne/Flexure/img3.jpg" alt="" />
-								<p style="text-align:center">A second approach used a mill and some sacrificial aluminum pieces to hold the steel in place. While this produced a more precise component, many drill bits were dulled in the process.</p>
-							</span> 
+							<div class="grid-container">
+								<div class="grid-img grid-left">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/Flexure/img4.jpg"/>
+										<p class="img_overlay">Poor approach: using a plastic jig in a bench vise to drill through individual springs.</p>
+									</div>
+								</div>
+								<div class="grid-right grid-text">
+									<h3>Machining</h3>
+									<p>The aluminium connectors were machined using the advanced cut-to-size-then-drill-some-holes fabrication technique. The leaf flexures on the other hand were the most labor intensive to machine. Spring steel is way less forgiving than aluminum when it comes to drilling holes.</p>
+								</div>
+								<div class="grid-img grid-left">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/Flexure/img3.jpg"/>
+										<p class="img_overlay">Successful approach: using a mill and sacrificial material to drill through the spring steel.</p>
+									</div>
+								</div>
+							</div>
 
-							<h3>Result</h3>
-							<p>We discovered a minor issue where the thumb screws could not clamp down with enough force when hand tightened, but this was fixed by replacing them with socket head screws, and inserting grip washers in between the aluminum components. </p>
-							<span class="image main">
-								<img src="images/Mesodyne/Flexure/img6.jpg" alt="" />
-								<p style="text-align:center">The flexure stage attached to the vacuum flange and mounted on an optical table.</p>
-							</span> 
-							<p>The flexure became a convenient part of our experimental setup.</p>
-
-							</span>
+							<div class="grid-container">
+								<div class="grid-left grid-text">
+									<h3>Final Result</h3>
+									<p>We discovered a minor issue where the thumb screws could not clamp down with enough force when hand tightened, but this was fixed by replacing them with socket head screws, and inserting grip washers in between the aluminum components. </p>
+								</div>
+								<div class="grid-img grid-right">
+									<div class="img_wrap">
+										<img class="img_img" src="images/Mesodyne/Flexure/img6.jpg"/>
+										<p class="img_overlay">The flexure stage attached to the vacuum flange and mounted on an optical table.</p>
+									</div>
+								</div>
+							</div>
 						</article>
 						
 						<article id="feeder">
 							<h2 class="major">Automatic Cat Feeder</h2>
+
 							<span class="image main">
 								<img src="images/Automatic Cat Feeder/feeder_cat.jpg" alt="" />
-								<p style="text-align:center"> Feed me hooman! (this is Zephyr)</p>
+								<p style="text-align:center"> Feed me hooman!</p>
 							</span>
 
 							<h3>Description</h3>
@@ -476,189 +577,7 @@
 						As of now, the linear stage is up and running. There is a PID loop running through an Arduino-Uno which takes in encoder data from the motor and adjusts the motor input voltage accordingly. The motor that is used is a <a href="https://www.vexrobotics.com/217-3371.html">VEX Mini Cim motor</a>, and the motor controller is a <a href="https://www.vexrobotics.com/217-9191.html">Talon SPX</a>. You can <a href="https://youtu.be/iQwe4ZnMEd0">see a video</a> of the linear stage being controlled by a potentiometer position.
 						In the near future I hope to get the pendulum installed and another feedback loop running through the Arduino to monitor its angular position. Then I will be able to control the pendulum setting a position and letting the machine balance itself!
 
-						<!-- <iframe width="420" height="315" src="https://youtu.be/iQwe4ZnMEd0"></iframe> -->
-
 						</article>
-
-						<!-- Murder Hornet Defense System -->
-						<!-- <article id="hivedefense">
-							<h2 class="major">Murder hornet defense system</h2>
-
-							<span class="image main">
-								<img src="images/Hive Guard/hiveguard_hornet.jpg" alt="" />
-								<p style="text-align:center"> Watch out for these bad boys!</p>
-							</span>
-
-							<h3>Description</h3>
-							<p>To safeguard our hardworking bees from the merciless attacks of murder hornets, a smart device is required to disable these troublemakers before they have a chance to inflict any damage. Look no further: introducing the HiveGuard, an open-sourced, AI-enabled, bug zapper security camera. Its main processor is a Raspberry Pi 3 which runs OpenCV on a pretrained model to interpret live footage from a Raspberry Pi camera. No charging is required, as it is designed to be recharged by the sun, and can run up to three days in dim sunlight (a must-have for you New Englanders). The electrical box, which also houses the camera, is connected to a bug zapper circuit at the beehive entrance, which is activated when a threat is detected. Just point the clear-lidded box at the beehive, press the power button, and let it start monitoring the beehive. To see live camera footage you can use a VPN service and a solid wifi connection. </p>
-
-							<h3>Progress</h3>
-							<p>This project is still in its development phase. Up until now, this project has demonstrated the possibility of running such a system off-grid and powering it solely with solar energy. I have also expreimented with turning the computer on and off in a cycle to conserve power. With AI algorithms running on the Raspberry Pi, there will be a sizable power draw, so having an acurate characterization of the system is necessary. Also, I have been able to connect to the camera and see its live feed it two different ways, one using a home wifi, and the other is configuring it as an access point.</p>
-
-							<h3>Design Process</h3>
-							<p>The first step was identifying the correct processor and power solutions. A Rapsberry Pi 3 was chosen due ot its low power draw and relatively high computing speeds. Moreover, there can also be added a USB AI accelerator such as <a href="https://anttihavanko.medium.com/detect-objects-with-raspberry-pi-using-google-coral-edge-tpu-15f9a46c317a">Google's Edge TPU accelerator</a>. </p>
-
-							<span class="image main">
-								<img src="images/Hive Guard/hiveguard_spreadsheet.jpg" alt="" />
-								<p style="text-align:center"> A spreadsheet to calculate power requirements for a the self-sustained solar-powered camera.</p>
-							</span>
-
-							<span class="image main">
-								<img src="images/Hive Guard/tile_hornet.jpg" alt="" />
-								<p style="text-align:center"> CAD model of electrical box assembly.</p>
-							</span>
-
-							<span class="image main">
-								<img src="images/Hive Guard/hiveguard_circuit.jpg" alt="" />
-								<p style="text-align:center"> Integrating electronic components in a preliminary test.</p>
-							</span>
-
-							<span class="image main">
-								<img src="images/Hive Guard/hiveguard_circuit-diagram.jpg" alt="" />
-								<p style="text-align:center"> Circuit diagram of electrical box internals.</p>
-							</span>
-
-							<p>The Arduino is included in the electrical box becasue the power bank periodically shuts down when too little current is being drawn. So every 40 seconds, current is drawn through a small resistor which resets the power bank's timer. The Arduino also reboots the Rapsberry Pi when it is told to do so, in order to conserve electron juice.</p>
-
-							<h3>Bill of Materials</h3>
-							<table>
-							<thead>
-							<tr>
-							<th align="left">Name</th>
-							<th align="left">Type</th>
-							<th align="left">Source</th>
-							<th align="center">Link</th>
-							<th align="right">Price</th>
-							</tr>
-							</thead>
-							<tbody><tr>
-							<td align="left">Waterproof ABS Project Box</td>
-							<td align="left">Hardware</td>
-							<td align="left">Bought</td>
-							<td align="center"><a href="https://www.amazon.com/Zulkit-Waterproof-Electrical-Transparent-220x170x110/dp/B07RVN91WB/">Amazon</a></td>
-							<td align="right">$29</td>
-							</tr>
-							<tr>
-							<td align="left">Transparent acrylic divider</td>
-							<td align="left">Hardware</td>
-							<td align="left">Custom</td>
-							<td align="center"></td>
-							<td align="right"></td>
-							</tr>
-							<tr>
-							<td align="left">3D-printed parts</td>
-							<td align="left">Hardware</td>
-							<td align="left">Custom</td>
-							<td align="center"></td>
-							<td align="right"></td>
-							</tr>
-							<tr>
-							<td align="left">Arduino Nano</td>
-							<td align="left">Electronics</td>
-							<td align="left">Bought</td>
-							<td align="center"><a href="https://www.amazon.com/LAFVIN-Board-ATmega328P-Micro-Controller-Arduino/dp/B07G99NNXL">Amazon</a></td>
-							<td align="right">$7</td>
-							</tr>
-							<tr>
-							<td align="left">Raspberry Pi 3 B+</td>
-							<td align="left">Electronics</td>
-							<td align="left">Bought</td>
-							<td align="center"><a href="https://www.microcenter.com/product/505170/allied-electronics-raspberry-pi-3-model-b">Microcenter</a></td>
-							<td align="right">$25</td>
-							</tr>
-							<tr>
-							<td align="left">Raspberry Pi camera Module v2.0</td>
-							<td align="left">Electronics</td>
-							<td align="left">Bought</td>
-							<td align="center"><a href="https://www.microcenter.com/product/463611/element-14-8mp-raspberry-pi-camera-module">Microcenter</a></td>
-							<td align="right">$25</td>
-							</tr>
-							<tr>
-							<td align="left">Photovoltaic Array, 28W 5V</td>
-							<td align="left">Electronics</td>
-							<td align="left">Bought</td>
-							<td align="center"><a href="https://www.amazon.com/gp/product/B071G4CQSR/">Amazon</a></td>
-							<td align="right">$64</td>
-							</tr>
-							<tr>
-							<td align="left">30,000 mAh Battery Pack</td>
-							<td align="left">Electronics</td>
-							<td align="left">Bought</td>
-							<td align="center"><a href="https://www.amazon.com/Portable-30000mAh-External-Compatible-30000mah/dp/B089GXCP3H">Amazon</a></td>
-							<td align="right">$25</td>
-							</tr>
-							<tr>
-							<td align="left">Power MOSFET (30 A, 60 V)</td>
-							<td align="left">Electronics</td>
-							<td align="left">Bought</td>
-							<td align="center"><a href="https://www.amazon.com/WeiMeet-RFP30N06LE-N-Channel-Mosfet-Arduino/dp/B07CTF1JVD">Amazon</a></td>
-							<td align="right">$8</td>
-							</tr>
-							<tr>
-							<td align="left">5mm LED (1 Red, 1 Yellow)</td>
-							<td align="left">Electronics</td>
-							<td align="left">Bought</td>
-							<td align="center"><a href="https://www.microcenter.com/product/456270/adafruit-industries-super-bright-red-5mm-led---25-pack">Sparkfun</a></td>
-							<td align="right">$10</td>
-							</tr>
-							<tr>
-							<td align="left">Rocker Switch 7x10mm</td>
-							<td align="left">Electronics</td>
-							<td align="left">Bought</td>
-							<td align="center"><a href="https://www.microcenter.com/product/420424/mcm-electronics-spst-1-2-x-3-4-mount-rocker-switch---125v---5a">Sparkfun</a></td>
-							<td align="right">$2</td>
-							</tr>
-							<tr>
-							<td align="left">Resistors (68, 330, 10k, 47k)</td>
-							<td align="left">Electronics</td>
-							<td align="left">Bought</td>
-							<td align="center"></td>
-							<td align="right"></td>
-							</tr>
-							<tr>
-							<td align="left">USB 2.0 Cable (Sacrificial)</td>
-							<td align="left">Electronics</td>
-							<td align="left">Custom</td>
-							<td align="center"></td>
-							<td align="right"></td>
-							</tr>
-							<tr>
-							<td align="left">USB Cable 2.0 to Mini, 6ft</td>
-							<td align="left">Electronics</td>
-							<td align="left">Bought</td>
-							<td align="center"><a href="https://www.amazon.com/Android-JSAUX-Charger-Braided-Compatible/dp/B07H91JTCD/">Amazon</a></td>
-							<td align="right">$10</td>
-							</tr>
-							<tr>
-							<td align="left">SanDisk USB Drive 64GB</td>
-							<td align="left">Electronics</td>
-							<td align="left">Bought</td>
-							<td align="center"><a href="https://www.amazon.com/SanDisk-128GB-Ultra-Flash-Drive/dp/B077VYCV37/">Amazon</a></td>
-							<td align="right">$11</td>
-							</tr>
-							<tr>
-							<td align="left"><strong>Total</strong></td>
-							<td align="left"></td>
-							<td align="left"> $236</td>
-							<td align="center"></td>
-							<td align="right"></td>
-							</tr>
-							</tbody></table>
- -->
-
-						</article>
-
-						<!-- Mahogany Deck -->
-						<!-- <article id="deck">
-							<h2 class="major">Mahogany Deck</h2>
-							<p>More content will be posted soon!</p>
-						</article> -->
-
-						<!-- DIY CNC Router -->
-						<!-- <article id="router">
-							<h2 class="major">DIY CNC Router</h2>
-							<p>More content will be posted soon!</p>
-						</article> -->
 
 					</div>
 

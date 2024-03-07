@@ -135,7 +135,7 @@ input, select, textarea {
 	}
 
 	body {
-		background: #00202C; /* background color for Research + Artwork */
+		background: #000000; /* background color for Research + Artwork */
 	}
 
 		body.is-preload *, body.is-preload *:before, body.is-preload *:after {
