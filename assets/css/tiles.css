@@ -3482,3 +3482,29 @@ input, select, textarea {
 	margin-right: auto;
 	width: 50%;
 	}
+
+	.navigation-bar {
+		z-index: 100;
+		width: 100%;
+		position: fixed;
+		display: grid;
+		grid-template-columns: 20% 20% 20% 20% 20%;
+		margin-bottom: 20px;
+		margin-top: 0;
+		top: 0;
+		background-color: #000000;
+		list-style-type:none;
+		padding: 5pt 5pt 5pt 5pt;
+	}
+	
+	.navigation-bar li {
+		font: inherit;
+		margin-left: auto;
+		margin-right: auto;
+		font-family: Helvetica;
+	}
+
+	.navigation-bar a {
+		color:#FFFBE4;
+		text-decoration: none;
+	}
